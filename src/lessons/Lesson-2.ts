@@ -1,7 +1,7 @@
 import { FrameBuffer } from "../lib/FrameBuffer";
 import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
 import { Sampler } from "../lib/Sampler";
-import textureURL from '../texture.png';
+import textureURL from '../assets/texture.png';
 import { BarycentricPoint, BLUE, Colour, EMPTY, Fragment, GREEN, Point, RED, UV } from "../lib/Types";
 
 // Create the frame buffer to draw to
@@ -65,7 +65,7 @@ function drawTriangles() {
     const processedVertex2 = vertexShader({ vertex: vertex2, colour: colour2 }, uniforms, varying2);
     const processedVertex3 = vertexShader({ vertex: vertex3, colour: colour3 }, uniforms, varying3);
 
-    const fragments = rasterizeTriangle(...processedVertex1, ...processedVertex2, ...processedVertex3);
+    const fragments = rasterizeTriangle(...processedVertex1, ...processedVertex2, ...processedVertex3, 0, 0, fb.width, fb.height);
 
     const varyingColour: Colour[] = [
       varying1.colour, varying2.colour, varying3.colour
@@ -75,14 +75,14 @@ function drawTriangles() {
       const interpolatedColour = blendBC(fragment.bc, varyingColour) as Colour;
 
       const colour = fragmentShader({ colour: interpolatedColour }, uniforms);
-      
-      fb.setPixel(...fragment.position, ...colour);
+
+      fb.setPixel(...fragment.position, colour);
     }
 
   }
 }
 
-export async function draw(screenCtx) {
+export async function draw(screenCtx: CanvasRenderingContext2D) {
   drawTriangles();
   fb.write(screenCtx);
 }

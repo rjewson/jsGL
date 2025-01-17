@@ -1,7 +1,7 @@
 import { FrameBuffer } from "../lib/FrameBuffer";
 import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
 import { Sampler } from "../lib/Sampler";
-import textureURL from '../texture.png';
+import textureURL from '../assets/texture.png';
 import { BarycentricPoint, BLUE, Colour, EMPTY, EMPTY_UV, Fragment, GREEN, Point, RED, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
 
@@ -47,8 +47,9 @@ function vertexShader(attributes: Attributes, uniforms: Uniforms, varying: Varyi
 
 function fragmentShader(varying: Varying, uniforms: Uniforms): Colour {
   // return the interpolated varying colour value unchanged
-  const colour = uniforms.sampler.sample(...varying.uv);
-  return colour;
+  const sampledColour: Colour = [0, 0, 0, 0];
+  uniforms.sampler.sample(...varying.uv, sampledColour);
+  return sampledColour;
 }
 
 function drawTriangles(vertex: Point[], uv: UV[], uniforms: Uniforms) {
@@ -65,7 +66,7 @@ function drawTriangles(vertex: Point[], uv: UV[], uniforms: Uniforms) {
     const processedVertex2 = vertexShader({ vertex: vertex2, uv: uv2 }, uniforms, varying2);
     const processedVertex3 = vertexShader({ vertex: vertex3, uv: uv3 }, uniforms, varying3);
 
-    const fragments = rasterizeTriangle(...processedVertex1, ...processedVertex2, ...processedVertex3);
+    const fragments = rasterizeTriangle(...processedVertex1, ...processedVertex2, ...processedVertex3, 0, 0, fb.width, fb.height);
 
     const varyingUV: UV[] = [
       varying1.uv, varying2.uv, varying3.uv
@@ -75,17 +76,17 @@ function drawTriangles(vertex: Point[], uv: UV[], uniforms: Uniforms) {
       const interpolatedUV = blendBC(fragment.bc, varyingUV) as UV;
 
       const colour = fragmentShader({ uv: interpolatedUV }, uniforms);
-      
-      fb.setPixel(...fragment.position, ...colour);
+
+      fb.setPixel(...fragment.position, colour);
     }
 
   }
 }
 
-export async function draw(screenCtx) {
+export async function draw(screenCtx: CanvasRenderingContext2D) {
   const texture = await loadTexture(textureURL);
   const sampler = new Sampler();
   sampler.bind(texture);
-  drawTriangles(vertex, uv, {sampler: sampler});
+  drawTriangles(vertex, uv, { sampler: sampler });
   fb.write(screenCtx);
 }

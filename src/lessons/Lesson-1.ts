@@ -1,7 +1,7 @@
 import { FrameBuffer } from "../lib/FrameBuffer";
 import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
 import { Sampler } from "../lib/Sampler";
-import textureURL from '../texture.png';
+import textureURL from '../assets/texture.png';
 import { BarycentricPoint, BLUE, Colour, Fragment, GREEN, Point, RED, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
 
@@ -14,13 +14,13 @@ const triangle: Point[] = [
   [100, 100], [100, 200], [200, 200]
 ];
 
-const fragments = rasterizeTriangle(...triangle[0], ...triangle[1], ...triangle[2]);
+const fragments = rasterizeTriangle(...triangle[0], ...triangle[1], ...triangle[2], 0, 0, fb.width, fb.height);
 
 // Examples 1 of drawing a single colour triangle
 
 function drawSingleColourTriangle() {
   for (const fragment of fragments) {
-    fb.setPixel(...fragment.position, ...RED);
+    fb.setPixel(...fragment.position, RED);
   }
 }
 
@@ -33,7 +33,7 @@ const colours: Colour[] = [
 function drawColourTriangle() {
   for (const fragment of fragments) {
     const interpolatedColour = blendBC(fragment.bc, colours) as Colour;
-    fb.setPixel(...fragment.position, ...interpolatedColour);
+    fb.setPixel(...fragment.position, interpolatedColour);
   }
 }
 
@@ -44,20 +44,21 @@ const uvs: UV[] = [
 ];
 
 function drawTextureTriangle(sampler: Sampler) {
+  const sampledColour: Colour = [0, 0, 0, 0];
   for (const fragment of fragments) {
     const uv = blendBC(fragment.bc, uvs) as UV;
-    const sampledColour = sampler.sample(...uv);
-    fb.setPixel(...fragment.position, ...sampledColour);
+    sampler.sample(...uv, sampledColour);
+    fb.setPixel(...fragment.position, sampledColour);
   }
 }
 
-export async function draw(screenCtx) {
+export async function draw(screenCtx: CanvasRenderingContext2D) {
   // drawSingleColourTriangle();
   // drawColourTriangle();
   const texture = await loadTexture(textureURL);
   const sampler = new Sampler();
   sampler.bind(texture);
   drawTextureTriangle(sampler);
-  
+
   fb.write(screenCtx);
 }

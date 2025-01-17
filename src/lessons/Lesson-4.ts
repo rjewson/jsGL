@@ -1,7 +1,7 @@
 import { FrameBuffer } from "../lib/FrameBuffer";
 import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
-import { Sampler } from "../lib/Sampler";
-import textureURL from '../texture.png';
+import { Sampler, SamplerIndex } from "../lib/Sampler";
+import textureURL from '../assets/texture.png';
 import { BarycentricPoint, BLUE, Colour, EMPTY, EMPTY_UV, Fragment, GREEN, Point, RED, UV } from "../lib/Types";
 import { loadTexture, Texture } from "../lib/Texture";
 
@@ -18,13 +18,19 @@ type Varying = {
   uv: UV;
 }
 
-export type Uniforms = {
-  sampler: Sampler;
+type Uniforms = {
+  sampler: SamplerIndex;
 }
 
-export type RenderParams = {
+type RenderParams = {
   blendMode: string;
 }
+
+// Hardware
+const fb = new FrameBuffer(1024, 1024);
+const samplers: Sampler[] = [new Sampler(), new Sampler()];
+const SAMPLER_0 = 0;
+const SAMPLER_1 = 1;
 
 function vertexShader(attributes: Attributes, uniforms: Uniforms, varying: Varying): Point {
   // copy the vertex colour value to a varying
@@ -36,7 +42,8 @@ function vertexShader(attributes: Attributes, uniforms: Uniforms, varying: Varyi
 
 function fragmentShader(varying: Varying, uniforms: Uniforms): Colour {
   // return the interpolated varying colour value unchanged
-  const colour = uniforms.sampler.sample(varying.uv[0], varying.uv[1]);
+  const colour: Colour = [0, 0, 0, 0];
+  samplers[uniforms.sampler].sample(varying.uv[0], varying.uv[1],colour);
   return colour;
 }
 
@@ -54,7 +61,7 @@ export function drawTriangles(fb: FrameBuffer, vertex: Point[], uv: UV[], unifor
     const processedVertex2 = vertexShader({ vertex: vertex2, uv: uv2 }, uniforms, varying2);
     const processedVertex3 = vertexShader({ vertex: vertex3, uv: uv3 }, uniforms, varying3);
 
-    const fragments = rasterizeTriangle(...processedVertex1, ...processedVertex2, ...processedVertex3);
+    const fragments = rasterizeTriangle(...processedVertex1, ...processedVertex2, ...processedVertex3, 0, 0, fb.width, fb.height);
 
     const varyingUV: UV[] = [
       varying1.uv, varying2.uv, varying3.uv
@@ -66,7 +73,7 @@ export function drawTriangles(fb: FrameBuffer, vertex: Point[], uv: UV[], unifor
 
       const colour = fragmentShader({ uv: interpolatedUV }, uniforms);
 
-      fb.setPixel(fragment.position[0], fragment.position[1], colour[0], colour[1], colour[2], colour[3]);
+      fb.setPixel(fragment.position[0], fragment.position[1], colour);
 
     }
 
@@ -86,10 +93,6 @@ function modifyVertex(vertex: Point[], angle: number, scale: number, offset: Poi
 }
 
 export async function draw2(screenCtx: CanvasRenderingContext2D | null) {
-
-  // Hardware
-  const fb = new FrameBuffer(1024, 1024);
-  const sampler = new Sampler();
 
   // Load the texture
   const texture = await loadTexture(textureURL);
@@ -126,9 +129,9 @@ export async function draw2(screenCtx: CanvasRenderingContext2D | null) {
     newUV.push(...(Math.random() > 0.5 ? uv1 : uv2));
   }
 
-  sampler.bind(texture);
+  samplers[SAMPLER_0].bind(texture);
 
-  const uniforms: Uniforms = { sampler: sampler };
+  const uniforms: Uniforms = { sampler: SAMPLER_0 };
   const params: RenderParams = { blendMode: 'normal' };
 
   drawTriangles(fb, newVertex, newUV, uniforms, params);
@@ -138,10 +141,6 @@ export async function draw2(screenCtx: CanvasRenderingContext2D | null) {
 }
 
 export async function draw(screenCtx: CanvasRenderingContext2D | null) {
-  // Hardware
-  const fb = new FrameBuffer(1024, 1024);
-  const sampler = new Sampler();
-
   // Load the texture
   const texture = await loadTexture(textureURL);
 
@@ -162,9 +161,9 @@ export async function draw(screenCtx: CanvasRenderingContext2D | null) {
   let offsetY = 0;
   let time = 0;
 
-  sampler.bind(texture);
+  samplers[SAMPLER_0].bind(texture);
 
-  const uniforms: Uniforms = { sampler: sampler };
+  const uniforms: Uniforms = { sampler: SAMPLER_0 };
   const params: RenderParams = { blendMode: 'normal' };
 
   function render() {

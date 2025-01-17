@@ -1,9 +1,7 @@
-export class Texture {
-
-    imageData: ImageData;
+export class Texture extends ImageData {
 
     constructor(imageData: ImageData) {
-        this.imageData = imageData;
+        super(imageData.data, imageData.width, imageData.height);
     }
 }
 
@@ -15,7 +13,8 @@ export async function loadTexture(url: string): Promise<Texture> {
             const textureCanvas = new OffscreenCanvas(img.width, img.height);
             const textureCtx = textureCanvas.getContext("2d", { willReadFrequently: true });
             textureCtx.drawImage(img, 0, 0);
-            const texture = new Texture(textureCtx.getImageData(0, 0, img.width, img.height));
+            const imageData = textureCtx.getImageData(0, 0, img.width, img.height);
+            const texture = new Texture(imageData);
             resolve(texture);
         }
         img.onerror = reject
