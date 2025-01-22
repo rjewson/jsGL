@@ -1,9 +1,13 @@
-import { Colour } from "./Types";
+import { Colour, Point } from "./Types";
 
 export class FrameBuffer extends ImageData {
 
+    clipTL: Point;
+    clipBR: Point;
+
     constructor(width: number, height: number) {
         super(width, height);
+        this.setClip(0, 0, width, height);
     }
 
     setPixel(x: number, y: number, colour: Colour): void {
@@ -16,9 +20,9 @@ export class FrameBuffer extends ImageData {
         // this.imageData.data.set(final, index);
 
         // This is faster than setting the individual RGBA values
-        
+
         this.data.set(colour, index);
-        
+
         // this.imageData.data[index + 0] = r;
         // this.imageData.data[index + 1] = g;
         // this.imageData.data[index + 2] = b;
@@ -28,12 +32,17 @@ export class FrameBuffer extends ImageData {
     write(outputCtx: CanvasRenderingContext2D): void {
         outputCtx.putImageData(this, 0, 0);
     }
-    
+
     clear(): void {
         this.data.fill(0);
     }
 
     blendMode(mode: string): void {
+    }
+
+    setClip(tlx: number, tly: number, brx: number, bry: number) {
+        this.clipTL = [tlx, tly];
+        this.clipBR = [brx-1, bry-1];
     }
 
     clip(x: number, y: number): boolean {

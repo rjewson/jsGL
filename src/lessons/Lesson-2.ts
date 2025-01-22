@@ -1,88 +1,124 @@
 import { FrameBuffer } from "../lib/FrameBuffer";
 import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
-import { Sampler } from "../lib/Sampler";
+import { Sampler, SamplerIndex } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
-import { BarycentricPoint, BLUE, Colour, EMPTY, Fragment, GREEN, Point, RED, UV } from "../lib/Types";
+import { Colour, EMPTY_UV, Point, UV } from "../lib/Types";
+import { loadTexture } from "../lib/Texture";
 
-// Create the frame buffer to draw to
-const fb = new FrameBuffer(1024, 1024);
-
-// Convert the triangle to a list of fragments
-
-// 2 triangles
-const vertex: Point[] = [
-  [50, 50], [50, 150], [150, 150],
-  [200, 50], [200, 100], [250, 100]
-];
-
-const colour: Colour[] = [
-  RED, GREEN, BLUE,
-  BLUE, GREEN, BLUE
-];
-
-type Buffers = {
+export type Buffers = {
   vertex: Point[];
-  colour: Colour[];
+  uv: UV[];
 }
 
-type Attributes = {
+export type Attributes = {
   vertex: Point;
-  colour: Colour;
+  uv: Point;
 }
 
-type Varying = {
-  colour: Colour;
+export type Varying = {
+  uv: UV;
 }
 
-type Uniforms = {
+export type Uniforms = {
+  sampler: Sampler;
 }
 
-const uniforms: Uniforms = {};
+export type RenderParams = {
+  blendMode: string;
+}
 
-function vertexShader(attributes: Attributes, uniforms: Uniforms, varying: Varying): Point {
+export type VertexShader = (arg0: Attributes, arg1: Uniforms, arg2: Varying, arg3: Point) => void;
+export type FragmentShader = (arg0: Varying, arg1: Uniforms, arg3: Colour) => void;
+
+export function vertexShader(attributes: Attributes, uniforms: Uniforms, varying: Varying, gl_Position: Point): void {
   // copy the vertex colour value to a varying
-  varying.colour = attributes.colour;
+  varying.uv = attributes.uv;
   // return the original vertex position unchanged
-  return attributes.vertex;
+  // return attributes.vertex;
+  gl_Position[0] = Math.floor(attributes.vertex[0]);
+  gl_Position[1] = Math.floor(attributes.vertex[1]);
 }
 
-function fragmentShader(varying: Varying, uniforms: Uniforms): Colour {
-  // return the interpolated varying colour value unchanged
-  return varying.colour;
+export function fragmentShader(varying: Varying, uniforms: Uniforms, gl_FragColor: Colour): void {
+  // write the interpolated varying colour value unchanged into the fragment colour
+  uniforms.sampler.sample(varying.uv[0], varying.uv[1], gl_FragColor);
 }
 
-function drawTriangles() {
-  for (let index = 0; index < vertex.length; index += 3) {
+// Draw call
+export function drawTriangles(
+  fb: FrameBuffer,
+  count: number,
+  buffers: Buffers,
+  uniforms: Uniforms,
+  vertexShader: VertexShader,
+  fragmentShader: FragmentShader,
+  params: RenderParams) {
+
+  const { vertex, uv } = buffers;
+
+  for (let index = 0; index < count * 3; index += 3) {
 
     const { [index]: vertex1, [index + 1]: vertex2, [index + 2]: vertex3 } = vertex;
-    const { [index]: colour1, [index + 1]: colour2, [index + 2]: colour3 } = colour;
+    const { [index]: uv1, [index + 1]: uv2, [index + 2]: uv3 } = uv;
 
-    const varying1: Varying = { colour: EMPTY };
-    const varying2: Varying = { colour: EMPTY };
-    const varying3: Varying = { colour: EMPTY };
+    const varying1: Varying = { uv: EMPTY_UV };
+    const varying2: Varying = { uv: EMPTY_UV };
+    const varying3: Varying = { uv: EMPTY_UV };
 
-    const processedVertex1 = vertexShader({ vertex: vertex1, colour: colour1 }, uniforms, varying1);
-    const processedVertex2 = vertexShader({ vertex: vertex2, colour: colour2 }, uniforms, varying2);
-    const processedVertex3 = vertexShader({ vertex: vertex3, colour: colour3 }, uniforms, varying3);
+    const processedVertex1: Point = [0, 0];
+    vertexShader({ vertex: vertex1, uv: uv1 }, uniforms, varying1, processedVertex1);
+    const processedVertex2: Point = [0, 0];
+    vertexShader({ vertex: vertex2, uv: uv2 }, uniforms, varying2, processedVertex2);
+    const processedVertex3: Point = [0, 0];
+    vertexShader({ vertex: vertex3, uv: uv3 }, uniforms, varying3, processedVertex3);
 
-    const fragments = rasterizeTriangle(...processedVertex1, ...processedVertex2, ...processedVertex3, 0, 0, fb.width, fb.height);
+    const fragments = rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clipTL, fb.clipBR);
 
-    const varyingColour: Colour[] = [
-      varying1.colour, varying2.colour, varying3.colour
+    const varyingUV: UV[] = [
+      varying1.uv, varying2.uv, varying3.uv
     ];
 
+    const gl_FragColor: Colour = [0, 0, 0, 0];
+
     for (const fragment of fragments) {
-      const interpolatedColour = blendBC(fragment.bc, varyingColour) as Colour;
 
-      const colour = fragmentShader({ colour: interpolatedColour }, uniforms);
+      const interpolatedUV = blendBC(fragment.bc, varyingUV) as UV;
 
-      fb.setPixel(...fragment.position, colour);
+      fragmentShader({ uv: interpolatedUV }, uniforms, gl_FragColor);
+
+      fb.setPixel(fragment.position[0], fragment.position[1], gl_FragColor);
+
     }
-
   }
 }
 
-export async function draw(screenCtx: CanvasRenderingContext2D) {
-  drawTriangles();
+export async function lesson2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+
+  // 2 triangles
+  const vertex: Point[] = [
+    [50, 50], [50, 150], [150, 150],
+    [50, 50], [150, 150], [150, 50]
+  ];
+
+  const uv: UV[] = [
+    [0, 0], [0, 0.25], [0.25, 0.25],
+    [0, 0], [0.25, 0.25], [0.25, 0]
+  ];
+
+  // Load texture
+  const texture = await loadTexture(textureURL);
+
+  // Create sampler and bind texture, add sampler to uniforms
+  const sampler: Sampler = new Sampler();  
+  sampler.bind(texture);
+  const uniforms: Uniforms = { sampler };
+  
+  // Rendering paramaters
+  const params: RenderParams = { blendMode: 'normal' };
+
+  // Draw call
+  drawTriangles(fb, 2, { vertex, uv }, uniforms, vertexShader, fragmentShader, params);
+
   fb.write(screenCtx);
+
 }

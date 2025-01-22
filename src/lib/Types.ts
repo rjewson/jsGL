@@ -3,6 +3,8 @@ export type UV = [u: number, v: number];
 export type Colour = [r: number, g: number, b: number, a: number];
 export type BarycentricPoint = [alpha: number, theta: number, gamma: number];
 
+export type TriangleVerticies = [number, number, number, number, number, number]; 
+
 export type Triangle = [Point, Point, Point];
 export type TriangleUV = [Point, Point, Point];
 
