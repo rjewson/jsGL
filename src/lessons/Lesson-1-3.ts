@@ -6,7 +6,7 @@ import { Colour, Point, UV } from "../lib/Types";
 import textureURL from '../assets/texture.png';
 
 function drawTexturedTriangle(fb: FrameBuffer, vertices: Point[], uvs: UV[], sampler: Sampler) {
-    const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], fb.clipTL, fb.clipBR);
+    const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], fb.clip.clipTL, fb.clip.clipBR);
     // Colour array to store and pass around
     const sampledColour: Colour = [0, 0, 0, 0];
     for (const fragment of fragments) {

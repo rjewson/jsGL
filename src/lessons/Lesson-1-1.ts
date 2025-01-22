@@ -5,7 +5,7 @@ import { Colour, Point } from "../lib/Types";
 // Examples 1-1 of drawing a single colour triangle
 
 function drawSingleColourTriangle(fb: FrameBuffer, vertices: Point[], colour: Colour) {
-    const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], fb.clipTL, fb.clipBR);
+    const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], fb.clip.clipTL, fb.clip.clipBR);
     for (const fragment of fragments) {
         // Write the fragment colour to the frame buffer
         fb.setPixel(...fragment.position, colour);
@@ -14,6 +14,8 @@ function drawSingleColourTriangle(fb: FrameBuffer, vertices: Point[], colour: Co
 }
 
 export async function lesson1_1(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+
+    console.log("%cSimple example to draw a single colour triangle", "color: blue;");
 
     const triangleVerticies: Point[] = [
         [100, 100], [100, 200], [200, 200]

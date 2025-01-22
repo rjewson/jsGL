@@ -1,3 +1,4 @@
+import { Point } from "../lib/Types";
 import { Container } from "./Container";
 import { CreateMat3, Vector2 } from "./utils";
 
@@ -14,6 +15,8 @@ export class DisplayObject {
     
     public alpha: number;
     public worldAlpha: number;
+
+    public clip: Point;
     
     public worldTransform: Float32Array;
     public localTransform: Float32Array;
@@ -31,6 +34,7 @@ export class DisplayObject {
         this.visible = true;
         this.renderable = false;
         this.parent = null;
+        this.clip = null;
         this.worldTransform = CreateMat3();
         this.localTransform = CreateMat3();
         this._rotationComponents = new Vector2();

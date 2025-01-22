@@ -7,6 +7,7 @@ import { lesson3_2 } from "./lessons/Lesson-3-2";
 import { lesson5_1 } from "./lessons/Lesson-5-1";
 import { lesson5_2 } from "./lessons/Lesson-5-2";
 import { lesson5_3 } from "./lessons/Lesson-5-3";
+import { lesson5_4 } from "./lessons/Lesson-5-4";
 import { FrameBuffer } from "./lib/FrameBuffer";
 
 import "./styles.css";
@@ -27,7 +28,8 @@ const lessons = {
     "3-2": lesson3_2,
     "5-1": lesson5_1,
     "5-2": lesson5_2,
-    "5-3": lesson5_3
+    "5-3": lesson5_3,
+    "5-4": lesson5_4,
 };
 
 //Common update loop

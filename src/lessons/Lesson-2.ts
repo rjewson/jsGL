@@ -72,7 +72,7 @@ export function drawTriangles(
     const processedVertex3: Point = [0, 0];
     vertexShader({ vertex: vertex3, uv: uv3 }, uniforms, varying3, processedVertex3);
 
-    const fragments = rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clipTL, fb.clipBR);
+    const fragments = rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR);
 
     const varyingUV: UV[] = [
       varying1.uv, varying2.uv, varying3.uv

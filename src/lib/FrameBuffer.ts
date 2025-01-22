@@ -1,13 +1,15 @@
+import { Clip } from "./Clip";
 import { Colour, Point } from "./Types";
 
 export class FrameBuffer extends ImageData {
 
-    clipTL: Point;
-    clipBR: Point;
+    public clip: Clip;
+    private defaultClip: Clip;
 
     constructor(width: number, height: number) {
         super(width, height);
-        this.setClip(0, 0, width, height);
+        this.defaultClip = new Clip(0,0,width,height);
+        this.setClip(this.defaultClip);
     }
 
     setPixel(x: number, y: number, colour: Colour): void {
@@ -40,14 +42,14 @@ export class FrameBuffer extends ImageData {
     blendMode(mode: string): void {
     }
 
-    setClip(tlx: number, tly: number, brx: number, bry: number) {
-        this.clipTL = [tlx, tly];
-        this.clipBR = [brx-1, bry-1];
+    setClip(clip: Clip) {
+        this.clip = clip;
     }
 
-    clip(x: number, y: number): boolean {
-        return x >= 0 && x < this.width && y >= 0 && y < this.height;
+    clearClip() {
+        this.clip = this.defaultClip;
     }
+
 }
 
 function blendRGBA(srcColor: Colour, dstColor: Colour): Colour {
