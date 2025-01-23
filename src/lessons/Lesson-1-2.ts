@@ -10,7 +10,7 @@ function drawMultiColourTriangle(fb: FrameBuffer, vertices: Point[], colours: Co
         // 1-2 interpolate the colour
         const interpolatedColour = blendBC(fragment.bc, colours) as Colour;
         // Write the fragment colour to the frame buffer
-        fb.setPixel(...fragment.position, interpolatedColour);
+        fb.set(...fragment.position, interpolatedColour);
     }
 }
 

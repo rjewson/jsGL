@@ -8,7 +8,7 @@ function drawSingleColourTriangle(fb: FrameBuffer, vertices: Point[], colour: Co
     const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], fb.clip.clipTL, fb.clip.clipBR);
     for (const fragment of fragments) {
         // Write the fragment colour to the frame buffer
-        fb.setPixel(...fragment.position, colour);
+        fb.set(...fragment.position, colour);
     }
     console.log("Fragment counts = "+fragments.length);
 }

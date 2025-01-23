@@ -10,6 +10,7 @@ import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2";
 import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
+import { updateFunctions } from "../main";
 
 // Example 2 - Simple displaylist example. 1 Sprite with 1 texture and 1 child sprite with second texture
 export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
@@ -28,6 +29,8 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
 
   const spriteTexture = new SpriteTexture(texture, new Rectangle(0, 0, 127, 127));
   const sprite = new Sprite();
+  sprite.position.x = 150;
+  sprite.position.y = 150;
   sprite.texture = spriteTexture;
   sprite.scale.x = sprite.scale.y = 0.5;
 
@@ -38,7 +41,6 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   sprite2.scale.x = sprite2.scale.y = 0.5;
   sprite2.position.x = 100;
   sprite2.position.y = 100;
-  // sprite2.rotation = Math.PI / 4;
 
   stage.addChild(sprite);
   sprite.addChild(sprite2);
@@ -49,9 +51,14 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     drawCallsPerFrame++;
   }
 
-  drawDisplayList(fb, stage, draw);
-
-  fb.write(screenCtx);
-  console.log("drawCallsPerFrame", drawCallsPerFrame);
+  const tick = (time: number) => {
+    fb.clear();
+    drawDisplayList(fb, stage, draw);
+    sprite.position.x = 100 + Math.sin(time/50)*50;
+    sprite.rotation += 0.01;
+    fb.write(screenCtx);
+  }
+  updateFunctions.push(tick);
+  
 }
 

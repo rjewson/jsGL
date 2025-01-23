@@ -44,7 +44,9 @@ export function fragmentShader(varying: Varying, uniforms: Uniforms, gl_FragColo
   uniforms.sampler.sample(varying.uv[0], varying.uv[1], gl_FragColor);
 }
 
-// Draw call
+// Draw call to WebGL
+// Final version, will be used in all future lessons
+// Note that this is very specific to the single use case of texture triangles
 export function drawTriangles(
   fb: FrameBuffer,
   count: number,
@@ -54,13 +56,19 @@ export function drawTriangles(
   fragmentShader: FragmentShader,
   params: RenderParams) {
 
+
+  // The buffers have to be uploaded from CPU side to GPU side
   const { vertex, uv } = buffers;
 
+  // Everything below here is executed on the GPU
   for (let index = 0; index < count * 3; index += 3) {
 
+    // Extract the 3 vertex attributes from buffer
     const { [index]: vertex1, [index + 1]: vertex2, [index + 2]: vertex3 } = vertex;
+    // Extract the 3 uv attributes from buffer
     const { [index]: uv1, [index + 1]: uv2, [index + 2]: uv3 } = uv;
 
+    // Create the varying data structure for each vertex shader
     const varying1: Varying = { uv: EMPTY_UV };
     const varying2: Varying = { uv: EMPTY_UV };
     const varying3: Varying = { uv: EMPTY_UV };
@@ -74,19 +82,23 @@ export function drawTriangles(
 
     const fragments = rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR);
 
+    
     const varyingUV: UV[] = [
       varying1.uv, varying2.uv, varying3.uv
     ];
 
     const gl_FragColor: Colour = [0, 0, 0, 0];
+    const fragmentVarying = { uv: [0, 0] as UV };
 
     for (const fragment of fragments) {
 
-      const interpolatedUV = blendBC(fragment.bc, varyingUV) as UV;
+      const [x, y] = fragment.position;
 
-      fragmentShader({ uv: interpolatedUV }, uniforms, gl_FragColor);
+      fragmentVarying.uv = blendBC(fragment.bc, varyingUV) as UV;
 
-      fb.setPixel(fragment.position[0], fragment.position[1], gl_FragColor);
+      fragmentShader(fragmentVarying, uniforms, gl_FragColor);
+
+      fb.set(x, y, gl_FragColor);
 
     }
   }
@@ -109,10 +121,10 @@ export async function lesson2(screenCtx: CanvasRenderingContext2D, fb: FrameBuff
   const texture = await loadTexture(textureURL);
 
   // Create sampler and bind texture, add sampler to uniforms
-  const sampler: Sampler = new Sampler();  
+  const sampler: Sampler = new Sampler();
   sampler.bind(texture);
   const uniforms: Uniforms = { sampler };
-  
+
   // Rendering paramaters
   const params: RenderParams = { blendMode: 'normal' };
 

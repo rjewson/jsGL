@@ -22,8 +22,8 @@ export class Sampler {
 
         const width = this.texture.width;
         const height = this.texture.height;
-        const x = Math.floor(u * width);
-        const y = Math.floor(v * height);
+        const x = Math.floor(u * width) % width;
+        const y = Math.floor(v * height) % height;
         if (x === this.prevX && y === this.prevY) {
             return;
         }

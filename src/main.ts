@@ -33,9 +33,10 @@ const lessons = {
 };
 
 //Common update loop
+let time = 0;
 export const updateFunctions = [];
 function tick() {
-    updateFunctions.forEach(fn => fn());
+    updateFunctions.forEach(fn => fn(time++));
     requestAnimationFrame(tick);
 }
 tick();

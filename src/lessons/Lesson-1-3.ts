@@ -15,7 +15,7 @@ function drawTexturedTriangle(fb: FrameBuffer, vertices: Point[], uvs: UV[], sam
         // 1-3 sample the texture with the interpolated UV
         sampler.sample(...interpolatedUV, sampledColour);
         // Write the fragment colour to the frame buffer
-        fb.setPixel(...fragment.position, sampledColour);
+        fb.set(...fragment.position, sampledColour);
     }
 }
 

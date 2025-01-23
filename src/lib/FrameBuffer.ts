@@ -12,7 +12,7 @@ export class FrameBuffer extends ImageData {
         this.setClip(this.defaultClip);
     }
 
-    setPixel(x: number, y: number, colour: Colour): void {
+    set(x: number, y: number, colour: Colour): void {
         var index = 4 * (x + y * this.width);
         if (colour[3] === 0) {
             return;

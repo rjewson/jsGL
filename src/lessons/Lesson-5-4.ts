@@ -28,7 +28,6 @@ export async function lesson5_4(screenCtx: CanvasRenderingContext2D, fb: FrameBu
 
   const stage = new Stage();
 
-  let time = 0;
   let ballons: Sprite[] = [];
   const greenBallonTexture = new SpriteTexture(greenBallonSourceTexture, new Rectangle(0, 0, 105, 156));
   const redBallonTexture = new SpriteTexture(redBallonSourceTexture, new Rectangle(0, 0, 105, 156));
@@ -39,7 +38,7 @@ export async function lesson5_4(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     drawCallsPerFrame++;
   }
 
-  const tick = () => {
+  const tick = (time: number) => {
     fb.clear();
 
     if (Math.random() > 0.98 && ballons.length < 10) {
