@@ -41,6 +41,7 @@ export async function lesson5_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
 
   drawDisplayList(fb, stage, draw);
   fb.write(screenCtx);
-  console.log("drawCallsPerFrame", drawCallsPerFrame);
+  console.log("Draw Calls = ", drawCallsPerFrame);
+
 }
 

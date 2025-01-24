@@ -51,8 +51,8 @@ export async function lesson3_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     time++;
     scale = Math.sin(time / 100) * 50 + 50;
     angle = time / 100;
-    offsetX = Math.sin(time / 100) * 50 + 50;
-    offsetY = Math.cos(time / 100) * 50 + 50;
+    offsetX = Math.sin(time / 100) * 50 + 150;
+    offsetY = Math.cos(time / 100) * 50 + 75;
     const newVertex: Point[] = [...modifyVertex(vertex, angle, scale, [offsetX, offsetY])];
     drawTriangles(fb, 2, { vertex: newVertex, uv }, uniforms, vertexShader, fragmentShader, params);
 

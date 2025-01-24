@@ -30,7 +30,7 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const spriteTexture = new SpriteTexture(texture, new Rectangle(0, 0, 127, 127));
   const sprite = new Sprite();
   sprite.position.x = 150;
-  sprite.position.y = 150;
+  sprite.position.y = 100;
   sprite.texture = spriteTexture;
   sprite.scale.x = sprite.scale.y = 0.5;
 
@@ -55,8 +55,9 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const tick = (time: number) => {
     fb.clear();
     drawDisplayList(fb, stage, draw);
-    sprite.position.x = 100 + Math.sin(time / 50) * 50;
+    sprite.position.x = 150 + Math.sin(time / 50) * 50;
     sprite.rotation += 0.01;
+    sprite2.rotation += 0.01;
     fb.write(screenCtx);
   }
   updateFunctions.push(tick);

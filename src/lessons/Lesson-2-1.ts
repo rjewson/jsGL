@@ -68,8 +68,8 @@ export async function lesson2_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
       ];
     
       const uv: UV[] = [
-        [0, 0], [0, 0.25], [0.25, 0.25],
-        [0, 0], [0.25, 0.25], [0.25, 0]
+        [0, 0], [0, 0.24], [0.24, 0.24],
+        [0, 0], [0.24, 0.24], [0.24, 0]
       ];
 
     const texture = await loadTexture(textureURL);
