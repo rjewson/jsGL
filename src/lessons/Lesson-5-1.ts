@@ -9,7 +9,7 @@ import { DisplayObject } from "../pixi/DisplayObject";
 import { Sprite } from "../pixi/Sprite";
 import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
-import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2";
+import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
 
 export async function lesson5_1(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {

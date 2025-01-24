@@ -54,9 +54,8 @@ export function drawTriangles(
   uniforms: Uniforms,
   vertexShader: VertexShader,
   fragmentShader: FragmentShader,
-  params: RenderParams) {
-
-
+  params: RenderParams) 
+{
   // Set the 'webgl' params
   fb.blendMode(params.blendMode);
 
@@ -107,7 +106,7 @@ export function drawTriangles(
   }
 }
 
-export async function lesson2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson2_2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
 
   // 2 triangles
   const vertex: Point[] = [

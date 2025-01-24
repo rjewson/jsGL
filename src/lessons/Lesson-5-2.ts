@@ -8,7 +8,7 @@ import { Stage } from "../pixi/Stage";
 import { Sprite } from "../pixi/Sprite";
 import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
-import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2";
+import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
 import { updateFunctions } from "../utils/Ticker";
 

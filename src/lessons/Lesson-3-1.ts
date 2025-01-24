@@ -3,7 +3,7 @@ import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
 import { Point, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
-import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2";
+import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 
 function modifyVertex(vertex: Point[], angle: number, scale: number, offset: Point): Point[] {
   const newVertex: Point[] = [];

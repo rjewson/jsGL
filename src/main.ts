@@ -1,7 +1,8 @@
 import { lesson1_1 } from "./lessons/Lesson-1-1";
 import { lesson1_2 } from "./lessons/Lesson-1-2";
 import { lesson1_3 } from "./lessons/Lesson-1-3";
-import { lesson2 } from "./lessons/Lesson-2";
+import { lesson2_1 } from "./lessons/Lesson-2-1";
+import { lesson2_2 } from "./lessons/Lesson-2-2";
 import { lesson3_1 } from "./lessons/Lesson-3-1";
 import { lesson3_2 } from "./lessons/Lesson-3-2";
 import { lesson5_1 } from "./lessons/Lesson-5-1";
@@ -26,7 +27,8 @@ const lessons: { [key: string]: (screenCtx: CanvasRenderingContext2D, fb: FrameB
     "1-1": lesson1_1,
     "1-2": lesson1_2,
     "1-3": lesson1_3,
-    "2-1": lesson2,
+    "2-1": lesson2_1,
+    "2-2": lesson2_2,
     "3-1": lesson3_1,
     "3-2": lesson3_2,
     "5-1": lesson5_1,
