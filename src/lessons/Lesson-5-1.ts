@@ -1,4 +1,4 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
 import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
 import { Point } from "../lib/Types";
@@ -17,7 +17,7 @@ export async function lesson5_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };
 
-  const params: RenderParams = { blendMode: 'normal' };
+  const params: RenderParams = { blendMode: BlendMode.Normal };
 
   let drawCallsPerFrame = 0;
 
@@ -32,8 +32,9 @@ export async function lesson5_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
 
   stage.addChild(sprite);
 
-  function draw(fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, count: number) {
+  function draw(fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
     sampler.bind(texture);
+    params.blendMode = blendMode;
     drawTriangles(fb, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
     drawCallsPerFrame++;
   }

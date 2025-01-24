@@ -1,14 +1,14 @@
+import { BlendMode } from "../lib/FrameBuffer";
 import { Point } from "../lib/Types";
 import { Container } from "./Container";
 import { SpriteTexture } from "./SpriteTexture";
 import { Vector2 } from "./utils";
 
-
 export class Sprite extends Container {
 
     public anchor: Vector2;
     public texture: SpriteTexture;
-    public blendEquation: number;
+    public blendMode: BlendMode;
 
     public transformedVerts: Float32Array;
 
@@ -17,7 +17,7 @@ export class Sprite extends Container {
         this.renderable = true;
         this.anchor = new Vector2();
         this.transformedVerts = new Float32Array(8);
-        this.blendEquation = WebGLRenderingContext.FUNC_ADD;
+        this.blendMode = BlendMode.Normal;
     }
 
     public draw(index:number, vertexData: Point[], uvData: Point[]) {

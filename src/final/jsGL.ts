@@ -26,7 +26,7 @@ export type RenderParams = {
   blendMode: string;
 }
 
-export class Program
+export class Program {}
 
 export class jsGL {
 

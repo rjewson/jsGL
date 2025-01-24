@@ -1,15 +1,24 @@
 import { Clip } from "./Clip";
 import { Colour, Point } from "./Types";
 
+export enum BlendMode {
+    Normal,
+    Add,
+    Multiply
+}
+
 export class FrameBuffer extends ImageData {
 
     public clip: Clip;
     private defaultClip: Clip;
+    private blend: BlendMode;
 
     constructor(width: number, height: number) {
         super(width, height);
-        this.defaultClip = new Clip(0,0,width,height);
+        this.defaultClip = new Clip(0, 0, width, height);
         this.setClip(this.defaultClip);
+        this.blendMode(BlendMode.Normal);
+
     }
 
     set(x: number, y: number, colour: Colour): void {
@@ -17,18 +26,8 @@ export class FrameBuffer extends ImageData {
         if (colour[3] === 0) {
             return;
         }
-        // const dstColor: Colour = [this.imageData.data[index + 0], this.imageData.data[index + 1], this.imageData.data[index + 2], this.imageData.data[index + 3]];
-        // const final = blendRGBA(colour, dstColor);
-        // this.imageData.data.set(final, index);
-
         // This is faster than setting the individual RGBA values
-
         this.data.set(colour, index);
-
-        // this.imageData.data[index + 0] = r;
-        // this.imageData.data[index + 1] = g;
-        // this.imageData.data[index + 2] = b;
-        // this.imageData.data[index + 3] = a;
     }
 
     write(outputCtx: CanvasRenderingContext2D): void {
@@ -39,7 +38,11 @@ export class FrameBuffer extends ImageData {
         this.data.fill(0);
     }
 
-    blendMode(mode: string): void {
+    blendMode(mode: BlendMode): void {
+        if (mode != this.blend) {
+            console.log("Blending set to " + BlendMode[mode]);
+            this.blend = mode;
+        }
     }
 
     setClip(clip: Clip) {

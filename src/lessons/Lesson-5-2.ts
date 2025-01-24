@@ -1,4 +1,4 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
 import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
 import greenBallonTextureURL from '../assets/BalloonGreen.webp';
@@ -10,7 +10,7 @@ import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2";
 import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
-import { updateFunctions } from "../main";
+import { updateFunctions } from "../utils/Ticker";
 
 // Example 2 - Simple displaylist example. 1 Sprite with 1 texture and 1 child sprite with second texture
 export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
@@ -18,7 +18,7 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };
 
-  const params: RenderParams = { blendMode: 'normal' };
+  const params: RenderParams = { blendMode: BlendMode.Normal };
 
   let drawCallsPerFrame = 0;
 
@@ -45,8 +45,9 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   stage.addChild(sprite);
   sprite.addChild(sprite2);
 
-  function draw(fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, count: number) {
+  function draw(fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
     sampler.bind(texture);
+    params.blendMode = blendMode;
     drawTriangles(fb, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
     drawCallsPerFrame++;
   }
@@ -54,11 +55,11 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const tick = (time: number) => {
     fb.clear();
     drawDisplayList(fb, stage, draw);
-    sprite.position.x = 100 + Math.sin(time/50)*50;
+    sprite.position.x = 100 + Math.sin(time / 50) * 50;
     sprite.rotation += 0.01;
     fb.write(screenCtx);
   }
   updateFunctions.push(tick);
-  
+
 }
 

@@ -1,4 +1,4 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
 import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
 import { Sampler, SamplerIndex } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
@@ -24,7 +24,7 @@ export type Uniforms = {
 }
 
 export type RenderParams = {
-  blendMode: string;
+  blendMode: BlendMode;
 }
 
 export type VertexShader = (arg0: Attributes, arg1: Uniforms, arg2: Varying, arg3: Point) => void;
@@ -57,6 +57,9 @@ export function drawTriangles(
   params: RenderParams) {
 
 
+  // Set the 'webgl' params
+  fb.blendMode(params.blendMode);
+
   // The buffers have to be uploaded from CPU side to GPU side
   const { vertex, uv } = buffers;
 
@@ -82,7 +85,7 @@ export function drawTriangles(
 
     const fragments = rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR);
 
-    
+
     const varyingUV: UV[] = [
       varying1.uv, varying2.uv, varying3.uv
     ];
@@ -126,7 +129,7 @@ export async function lesson2(screenCtx: CanvasRenderingContext2D, fb: FrameBuff
   const uniforms: Uniforms = { sampler };
 
   // Rendering paramaters
-  const params: RenderParams = { blendMode: 'normal' };
+  const params: RenderParams = { blendMode: BlendMode.Normal };
 
   // Draw call
   drawTriangles(fb, 2, { vertex, uv }, uniforms, vertexShader, fragmentShader, params);

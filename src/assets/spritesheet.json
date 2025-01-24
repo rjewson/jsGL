@@ -1,0 +1,55 @@
+{
+	"frames": {
+		"BalloonGreen.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 106,
+				"h": 157
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 106,
+				"h": 157
+			},
+			"sourceSize": {
+				"w": 106,
+				"h": 157
+			}
+		},
+		"BalloonRed.png": {
+			"frame": {
+				"x": 109,
+				"y": 1,
+				"w": 106,
+				"h": 157
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 106,
+				"h": 157
+			},
+			"sourceSize": {
+				"w": 106,
+				"h": 157
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 216,
+			"h": 159
+		},
+		"scale": "1"
+	}
+}

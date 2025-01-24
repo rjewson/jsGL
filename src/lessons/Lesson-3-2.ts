@@ -1,10 +1,10 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
 import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
 import { Point, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2";
-import { updateFunctions } from "../main";
+import { updateFunctions } from "../utils/Ticker";
 
 function modifyVertex(vertex: Point[], angle: number, scale: number, offset: Point): Point[] {
   const newVertex: Point[] = [];
@@ -27,7 +27,7 @@ export async function lesson3_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const uniforms: Uniforms = { sampler };
 
   // Rendering paramaters
-  const params: RenderParams = { blendMode: 'normal' };
+  const params: RenderParams = { blendMode: BlendMode.Normal };
 
   // Normalized triangle
   const vertex: Point[] = [

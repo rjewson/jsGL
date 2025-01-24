@@ -1,4 +1,4 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
 import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
 import { Point, UV } from "../lib/Types";
@@ -60,7 +60,7 @@ export async function lesson3_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   sampler.bind(texture);
   const uniforms: Uniforms = { sampler };
 
-  const params: RenderParams = { blendMode: 'normal' };
+  const params: RenderParams = { blendMode: BlendMode.Normal };
 
   drawTriangles(fb, count*2, { vertex: newVertex, uv: newUV }, uniforms, vertexShader, fragmentShader, params);
 

@@ -8,18 +8,21 @@ import { lesson5_1 } from "./lessons/Lesson-5-1";
 import { lesson5_2 } from "./lessons/Lesson-5-2";
 import { lesson5_3 } from "./lessons/Lesson-5-3";
 import { lesson5_4 } from "./lessons/Lesson-5-4";
+import { lesson5_5 } from "./lessons/Lesson-5-5";
 import { FrameBuffer } from "./lib/FrameBuffer";
 
 import "./styles.css";
+import { disposePane } from "./utils/Options";
+import { updateFunctions } from "./utils/Ticker";
 
 const canvas: HTMLCanvasElement = document.getElementById("output") as HTMLCanvasElement;
 canvas.width = 300;
-canvas.height = 300;
+canvas.height = 250;
 const screenCtx = canvas.getContext("2d");
 
 const frameBuffer: FrameBuffer = new FrameBuffer(canvas.width, canvas.height);
 
-const lessons = {
+const lessons: { [key: string]: (screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) => Promise<void> } = {
     "1-1": lesson1_1,
     "1-2": lesson1_2,
     "1-3": lesson1_3,
@@ -30,23 +33,16 @@ const lessons = {
     "5-2": lesson5_2,
     "5-3": lesson5_3,
     "5-4": lesson5_4,
+    "5-5": lesson5_5,
 };
-
-//Common update loop
-let time = 0;
-export const updateFunctions = [];
-function tick() {
-    updateFunctions.forEach(fn => fn(time++));
-    requestAnimationFrame(tick);
-}
-tick();
 
 // Make UI
 const linkContainer = document.getElementById("links");
 for (const key of Object.keys(lessons)) {
     const link = document.createElement('a');
+    link.id = key;
     link.href = "#" + key;
-    link.textContent = "Lesson " + key;
+    link.textContent = "L " + key;
     linkContainer.appendChild(link);
 }
 
@@ -58,11 +54,15 @@ function locationHashChanged() {
         console.log("Lesson " + urlLesson);
         updateFunctions.length = 0;
         frameBuffer.clear();
-        lessons[urlLesson](screenCtx, frameBuffer);
+        disposePane();
+
+        (lessons[urlLesson as keyof typeof lessons])(screenCtx, frameBuffer);
     } else {
         window.location.hash = "1-1";
-    }
+    } 
 }
 
 window.onhashchange = locationHashChanged;
+
 locationHashChanged();
+// console.log("hi2");

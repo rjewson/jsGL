@@ -1,4 +1,4 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
 import { Texture } from "../lib/Texture";
 import { Point } from "../lib/Types";
 import { Container } from "./Container";
@@ -22,7 +22,7 @@ for (let i = 0; i < uvData.length; i++) {
     uvData[i] = [0, 0];
 }
 
-export function drawDisplayList(fb: FrameBuffer, stage: Stage, draw: (fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, count: number) => void) {
+export function drawDisplayList(fb: FrameBuffer, stage: Stage, draw: (fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) => void) {
     // Each display list item updates its transform
     stage.updateTransform();
 
@@ -37,17 +37,21 @@ export function drawDisplayList(fb: FrameBuffer, stage: Stage, draw: (fb: FrameB
     top = 1;
 
     var indexRun = 0;
+
     var currentTexture: Texture = null;
+    var currentBlendMode: BlendMode = null;
+
     node.iterate((node: DisplayObject) => {
         if (node.visible && node.renderable) {
             var sprite: Sprite = node as Sprite;
-            if (sprite.texture.baseTexture != currentTexture || indexRun == BUFFER_SIZE) {
+            if (sprite.texture.baseTexture != currentTexture || sprite.blendMode != currentBlendMode || indexRun == BUFFER_SIZE) {
                 if (indexRun > 0) {
                     // If we have data to draw, flush it to the GPU
-                    draw(fb, vertexData, uvData, currentTexture, indexRun);
+                    draw(fb, vertexData, uvData, currentTexture, currentBlendMode, indexRun);
                 }
                 indexRun = 0;
                 currentTexture = sprite.texture.baseTexture;
+                currentBlendMode = sprite.blendMode;
             }
             // 'draw' the sprite verticies and uvs into the buffers
             sprite.draw(indexRun * ENTRIES_PER_TRIANGLE * 2, vertexData, uvData);
@@ -57,6 +61,6 @@ export function drawDisplayList(fb: FrameBuffer, stage: Stage, draw: (fb: FrameB
 
     if (indexRun > 0) {
         // any remaining data needs to be flushed
-        draw(fb, vertexData, uvData, currentTexture, indexRun);
+        draw(fb, vertexData, uvData, currentTexture, currentBlendMode, indexRun);
     }
 }

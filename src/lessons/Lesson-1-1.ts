@@ -9,7 +9,7 @@ function drawSingleColourTriangle(fb: FrameBuffer, vertices: Point[], colour: Co
     for (const fragment of fragments) {
         // Write the fragment colour to the frame buffer
         fb.set(...fragment.position, colour);
-    }
+    } 
     console.log("Fragment counts = "+fragments.length);
 }
 

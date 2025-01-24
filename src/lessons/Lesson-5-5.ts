@@ -1,4 +1,4 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
 import { Sampler } from "../lib/Sampler";
 import greenBallonTextureURL from '../assets/BalloonGreen.webp';
 import redBallonTextureURL from '../assets/BalloonRed.webp';
@@ -8,18 +8,18 @@ import { Stage } from "../pixi/Stage";
 import { Sprite } from "../pixi/Sprite";
 import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
-import { updateFunctions } from "../main";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2";
 import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
+import { updateFunctions } from "../utils/Ticker";
 
 
 
-export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson5_5(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
 
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };
 
-  const params: RenderParams = { blendMode: 'normal' };
+  const params: RenderParams = { blendMode: BlendMode.Normal };
 
   let drawCallsPerFrame = 0;
 
@@ -28,18 +28,18 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBu
 
   const stage = new Stage();
 
-  let time = 0;
   let ballons: Sprite[] = [];
   const greenBallonTexture = new SpriteTexture(greenBallonSourceTexture, new Rectangle(0, 0, 105, 156));
   const redBallonTexture = new SpriteTexture(redBallonSourceTexture, new Rectangle(0, 0, 105, 156));
 
-  function draw(fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, count: number) {
+  function draw(fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
     sampler.bind(texture);
+    params.blendMode = blendMode;
     drawTriangles(fb, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
     drawCallsPerFrame++;
   }
 
-  const tick = () => {
+  const tick = (time: number) => {
     fb.clear();
 
     if (Math.random() > 0.98 && ballons.length < 10) {
@@ -49,6 +49,7 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBu
       ballon.position.y = 300;
       ballon.anchor.x = 0.5;
       ballon.anchor.y = 0.5;
+      ballon.scale.x = ballon.scale.y = 0.5;
 
       stage.addChild(ballon);
       ballons.push(ballon);
@@ -57,7 +58,8 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     ballons = ballons.map(ballon => {
       ballon.position.y -= 1;
       ballon.rotation += Math.sin(time / 10) * 0.005;
-      // ballon.scale.x += 1 + Math.sin(time / 10) * 0.5;
+      // ballon.scale.x = ( Math.sin(time / 20) * 0.5);
+      // ballon.scale.y = 1 + ( Math.sin(time / 20) * 0.15);
       if (ballon.position.y < -100) {
         stage.removeChild(ballon);
         return null;
