@@ -22,11 +22,11 @@ function drawTexturedTriangle(fb: FrameBuffer, vertices: Point[], uvs: UV[], sam
 export async function lesson1_3(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
 
     const triangleVerticies: Point[] = [
-        [100, 100], [100, 200], [200, 200]
+        [100, 75], [100, 175], [200, 175]
     ];
 
     const uvs: UV[] = [
-        [0, 0], [0, 0.25], [0.25, 0.25]
+        [0, 0], [0, 0.24], [0.24, 0.24]
     ];
 
     const texture = await loadTexture(textureURL);

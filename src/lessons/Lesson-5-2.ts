@@ -10,7 +10,7 @@ import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
-import { updateFunctions } from "../utils/Ticker";
+import { onTick } from "../utils/Ticker";
 
 // Example 2 - Simple displaylist example. 1 Sprite with 1 texture and 1 child sprite with second texture
 export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
@@ -52,15 +52,16 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     drawCallsPerFrame++;
   }
 
-  const tick = (time: number) => {
+  const tick = (dt: number, step:number) => {
     fb.clear();
     drawDisplayList(fb, stage, draw);
-    sprite.position.x = 150 + Math.sin(time / 50) * 50;
+    sprite.position.x = 150 + Math.sin(step / 300) * 50;
     sprite.rotation += 0.01;
     sprite2.rotation += 0.01;
     fb.write(screenCtx);
+    return true;
   }
-  updateFunctions.push(tick);
+  onTick(tick);
 
 }
 

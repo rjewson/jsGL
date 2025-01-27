@@ -10,8 +10,7 @@ import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
-import { updateFunctions } from "../utils/Ticker";
-
+import { onTick } from "../utils/Ticker";
 
 
 export async function lesson5_5(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
@@ -39,7 +38,7 @@ export async function lesson5_5(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     drawCallsPerFrame++;
   }
 
-  const tick = (time: number) => {
+  const tick = (dt: number, step:number) => {
     fb.clear();
 
     if (Math.random() > 0.98 && ballons.length < 10) {
@@ -55,9 +54,9 @@ export async function lesson5_5(screenCtx: CanvasRenderingContext2D, fb: FrameBu
       ballons.push(ballon);
     }
 
-    ballons = ballons.map(ballon => {
+    ballons = ballons.map((ballon, i) => {
       ballon.position.y -= 1;
-      ballon.rotation += Math.sin(time / 10) * 0.005;
+      ballon.rotation = Math.sin((step / 100)) * 0.1;
       // ballon.scale.x = ( Math.sin(time / 20) * 0.5);
       // ballon.scale.y = 1 + ( Math.sin(time / 20) * 0.15);
       if (ballon.position.y < -100) {
@@ -71,9 +70,9 @@ export async function lesson5_5(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     fb.write(screenCtx);
     console.log("Draw Calls = ", drawCallsPerFrame);
     drawCallsPerFrame = 0;
-    time++;
+    return true;
   }
 
-  updateFunctions.push(tick);
+  onTick(tick);
 
 }

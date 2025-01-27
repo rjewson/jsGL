@@ -18,7 +18,7 @@ export async function lesson1_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     console.log("%cSimple example to draw a single colour triangle", "color: blue;");
 
     const triangleVerticies: Point[] = [
-        [100, 100], [100, 200], [200, 200]
+        [100, 75], [100, 175], [200, 175]
     ];
 
     const RED: Colour = [255, 0, 0, 255];

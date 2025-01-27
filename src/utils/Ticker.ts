@@ -1,15 +1,34 @@
 //Common update loop
-let time = 0;
+
 interface UpdateFunction {
-    (time: number): void;
+    (dt: number, step: number): boolean;
 }
 
-export const updateFunctions: UpdateFunction[] = [];
+let updateFunctions: UpdateFunction[] = [];
+let prevTime = Date.now();
+let step = 0;
 
 function tick() {
-    time++
-    updateFunctions.forEach(fn => fn(time));
+    const time = Date.now();
+    const dt = time - prevTime;
+    step+=dt;
+    prevTime = time;
+    updateFunctions = updateFunctions.map(fn => {
+        if (fn(dt, step)) { 
+            return fn;
+        }
+        return null;
+    });
+    updateFunctions = updateFunctions.filter(fn => fn !== null);
     requestAnimationFrame(tick);
+}
+
+export function onTick(fn: UpdateFunction) {
+    updateFunctions.push(fn);
+}
+
+export function clearOnTick() {
+    updateFunctions = [];
 }
 
 tick();

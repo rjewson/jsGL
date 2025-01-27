@@ -4,7 +4,7 @@ import textureURL from '../assets/texture.png';
 import { Point, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
-import { updateFunctions } from "../utils/Ticker";
+import { onTick } from "../utils/Ticker";
 
 function modifyVertex(vertex: Point[], angle: number, scale: number, offset: Point): Point[] {
   const newVertex: Point[] = [];
@@ -44,22 +44,21 @@ export async function lesson3_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   let angle = 0;
   let offsetX = 0;
   let offsetY = 0;
-  let time = 0;
 
-  function tick() {
+  function tick(dt:number, step:number) {
     fb.clear();
-    time++;
-    scale = Math.sin(time / 100) * 50 + 50;
-    angle = time / 100;
-    offsetX = Math.sin(time / 100) * 50 + 150;
-    offsetY = Math.cos(time / 100) * 50 + 75;
+    scale = Math.sin(step / 300) * 50 + 50;
+    angle = step / 300;
+    offsetX = Math.sin(step / 300) * 50 + 150;
+    offsetY = Math.cos(step / 300) * 50 + 75;
     const newVertex: Point[] = [...modifyVertex(vertex, angle, scale, [offsetX, offsetY])];
     drawTriangles(fb, 2, { vertex: newVertex, uv }, uniforms, vertexShader, fragmentShader, params);
 
     fb.write(screenCtx);
+    return true;
   }
-  
-  updateFunctions.push(tick);
-  
+
+  onTick(tick);
+
 
 }

@@ -10,11 +10,12 @@ import { lesson5_2 } from "./lessons/Lesson-5-2";
 import { lesson5_3 } from "./lessons/Lesson-5-3";
 import { lesson5_4 } from "./lessons/Lesson-5-4";
 import { lesson5_5 } from "./lessons/Lesson-5-5";
+import { lesson5_6 } from "./lessons/Lesson-5-6";
 import { FrameBuffer } from "./lib/FrameBuffer";
 
 import "./styles.css";
 import { disposePane } from "./utils/Options";
-import { updateFunctions } from "./utils/Ticker";
+import { clearOnTick } from "./utils/Ticker";
 
 const canvas: HTMLCanvasElement = document.getElementById("output") as HTMLCanvasElement;
 canvas.width = 300;
@@ -36,6 +37,7 @@ const lessons: { [key: string]: (screenCtx: CanvasRenderingContext2D, fb: FrameB
     "5-3": lesson5_3,
     "5-4": lesson5_4,
     "5-5": lesson5_5,
+    "5-6": lesson5_6,
 };
 
 // Make UI
@@ -54,7 +56,7 @@ function locationHashChanged() {
     if (lessons.hasOwnProperty(urlLesson)) {
         console.clear();
         console.log("Lesson " + urlLesson);
-        updateFunctions.length = 0;
+        clearOnTick();
         frameBuffer.clear();
         disposePane();
 
@@ -67,4 +69,3 @@ function locationHashChanged() {
 window.onhashchange = locationHashChanged;
 
 locationHashChanged();
-// console.log("hi2");
