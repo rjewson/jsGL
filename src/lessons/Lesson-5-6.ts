@@ -9,10 +9,8 @@ import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } f
 import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
 import { BitmapFont } from "../pixi/SpriteSheet";
 import { fontConfig } from "../assets/font";
-import { easeOutBack, easeOutBounce, easeOutQuad, tween } from "../utils/Tween";
+import { easeOutBack, tween } from "../utils/Tween";
 import { onTick } from "../utils/Ticker";
-import { Vector2 } from "../pixi/utils";
-
 
 export async function lesson5_6(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
 
@@ -81,9 +79,7 @@ export async function lesson5_6(screenCtx: CanvasRenderingContext2D, fb: FrameBu
         l.scale.x = 3 + Math.sin(step / 100 + i) * 0.75;
         l.scale.y = 3 + Math.cos(step / 100 + i) * 0.5;
         l.rotation = Math.sin((step + i) / 100) * 0.15;
-
       });
-
 
       drawDisplayList(fb, stage, draw);
       fb.write(screenCtx);

@@ -47,10 +47,10 @@ export async function lesson3_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
 
   function tick(dt:number, step:number) {
     fb.clear();
-    scale = Math.sin(step / 300) * 50 + 50;
-    angle = step / 300;
-    offsetX = Math.sin(step / 300) * 50 + 150;
-    offsetY = Math.cos(step / 300) * 50 + 75;
+    scale = Math.sin(step / 600) * 50 + 50;
+    angle = step / 600;
+    offsetX = Math.sin(step / 600) * 50 + 150;
+    offsetY = Math.cos(step / 600) * 50 + 75;
     const newVertex: Point[] = [...modifyVertex(vertex, angle, scale, [offsetX, offsetY])];
     drawTriangles(fb, 2, { vertex: newVertex, uv }, uniforms, vertexShader, fragmentShader, params);
 

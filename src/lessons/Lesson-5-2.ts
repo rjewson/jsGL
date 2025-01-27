@@ -52,7 +52,7 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     drawCallsPerFrame++;
   }
 
-  const tick = (dt: number, step:number) => {
+  const tick = (dt: number, step: number) => {
     fb.clear();
     drawDisplayList(fb, stage, draw);
     sprite.position.x = 150 + Math.sin(step / 300) * 50;
@@ -62,6 +62,4 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     return true;
   }
   onTick(tick);
-
 }
-

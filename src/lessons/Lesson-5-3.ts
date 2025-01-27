@@ -35,10 +35,12 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     drawCallsPerFrame++;
   }
 
+  // Make it dynamic with tweekpane
   const lessonOptions = {
     useSpriteSheet: false,
     alternateSprites: false,
     alternateBlendModes: false,
+    drawCalls: 0
   };
 
   const pane = createPane();
@@ -46,13 +48,19 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const b0 = pane.addBinding(lessonOptions, 'useSpriteSheet');
   const b1 = pane.addBinding(lessonOptions, 'alternateSprites');
   const b2 = pane.addBinding(lessonOptions, 'alternateBlendModes');
-
+  pane.addBinding(lessonOptions, 'drawCalls', {
+    readonly: true,
+    view: 'graph',
+    min: 0,
+    max: 20,
+  });
 
   [b0, b1, b2].forEach(b => {
     b.on('change', (_) => {
       renderExample(lessonOptions.useSpriteSheet, lessonOptions.alternateSprites, lessonOptions.alternateBlendModes);
     });
   })
+  // end tweekpane
 
   function renderExample(useSpriteSheet: boolean, alternateSprites: boolean, alternateBlendModes: boolean) {
 
@@ -94,6 +102,7 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     drawDisplayList(fb, stage, draw);
     fb.write(screenCtx);
     console.log("Draw Calls = ", drawCallsPerFrame);
+    lessonOptions.drawCalls = drawCallsPerFrame;
     drawCallsPerFrame = 0;
   }
 

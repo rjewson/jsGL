@@ -4,8 +4,6 @@ import textureURL from '../assets/texture.png';
 import { Point } from "../lib/Types";
 import { loadTexture, Texture } from "../lib/Texture";
 import { Stage } from "../pixi/Stage";
-import { Container } from "../pixi/Container";
-import { DisplayObject } from "../pixi/DisplayObject";
 import { Sprite } from "../pixi/Sprite";
 import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
@@ -28,6 +26,8 @@ export async function lesson5_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const spriteTexture = new SpriteTexture(texture, new Rectangle(0, 0, (1024 / 8) - 1, (1024 / 8) - 1));
   const sprite = new Sprite();
   sprite.texture = spriteTexture;
+  sprite.position.x = 75;
+  sprite.position.y = 75;
   sprite.scale.x = sprite.scale.y = 0.5;
 
   stage.addChild(sprite);

@@ -55,10 +55,10 @@ export async function lesson5_5(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     }
 
     ballons = ballons.map((ballon, i) => {
-      ballon.position.y -= 1;
-      ballon.rotation = Math.sin((step / 100)) * 0.1;
-      // ballon.scale.x = ( Math.sin(time / 20) * 0.5);
-      // ballon.scale.y = 1 + ( Math.sin(time / 20) * 0.15);
+      ballon.position.y -= 1 + (i * 0.25);
+      ballon.rotation = Math.sin((step / 100) + i/10) * 0.1;
+      ballon.scale.x = 0.5 + Math.sin(step / 100) * 0.025;
+      ballon.scale.y = 0.5 + Math.cos(step / 100 + i) * 0.0125;
       if (ballon.position.y < -100) {
         stage.removeChild(ballon);
         return null;
