@@ -46,13 +46,21 @@ export function rasterizeTriangle(p1: Point, p2: Point, p3: Point, clip_p1: Poin
     return fragments;
 }
 
-export function blendBC(bc: BarycentricPoint, data: number[][]): number[] {
-    const [alpha, theta, gamma] = bc;
-    const result = [];
-    const count = data[0].length
+export function blendBC(bc: BarycentricPoint, data: number[][], result: number[]): number[] {
+    const count = data[0].length;
     for (let i = 0; i < count; i++) {
-        result.push(alpha * data[0][i] + theta * data[1][i] + gamma * data[2][i]);
+        result[i] = (bc[0] * data[0][i] + bc[1] * data[1][i] + bc[2] * data[2][i]);
     }
     return result;
 }
+
+// export function blendBC(bc: BarycentricPoint, data: number[][]): number[] {
+//     const [alpha, theta, gamma] = bc;
+//     const result = [];
+//     const count = data[0].length;
+//     for (let i = 0; i < count; i++) {
+//         result.push(alpha * data[0][i] + theta * data[1][i] + gamma * data[2][i]);
+//     }
+//     return result;
+// }
 

@@ -22,12 +22,28 @@ export class DrawingBuffer extends ImageData {
     }
 
     set(x: number, y: number, colour: Colour): void {
+        // Overwrite the existing pixel data unless the new pixel is fully transparent
+        // var index = 4 * (x + y * this.width);
+        // if (colour[3] === 0) {
+        //     return;
+        // }
+        // // This is faster than setting the individual RGBA values
+        // this.data.set(colour, index);
+
+        // Blend the new pixel correctly with alpha blending
         var index = 4 * (x + y * this.width);
-        if (colour[3] === 0) {
-            return;
-        }
-        // This is faster than setting the individual RGBA values
-        this.data.set(colour, index);
+        var existingColour_r = this.data[index];
+        var existingColour_g = this.data[index+1];
+        var existingColour_b = this.data[index+2];
+        var existingColour_a = this.data[index+3];
+
+        var alpha = colour[3] / 255;
+        var invAlpha = 1 - alpha;
+
+        this.data[index] = Math.round(colour[0] * alpha + existingColour_r * invAlpha);
+        this.data[index + 1] = Math.round(colour[1] * alpha + existingColour_g * invAlpha);
+        this.data[index + 2] = Math.round(colour[2] * alpha + existingColour_b * invAlpha);
+        this.data[index + 3] = Math.round(colour[3] + existingColour_a * invAlpha);
     }
 
     write(outputCtx: CanvasRenderingContext2D): void {
@@ -53,25 +69,4 @@ export class DrawingBuffer extends ImageData {
         this.clip = this.defaultClip;
     }
 
-}
-
-function blendRGBA(srcColor: Colour, dstColor: Colour): Colour {
-    // srcColor and dstColor should be in the form of [R, G, B, A] where A is from 0 to 1
-    const srcAlpha = srcColor[3];
-    const dstAlpha = dstColor[3];
-
-    // Blending formula
-    const outAlpha = srcAlpha + dstAlpha * (1 - srcAlpha);
-
-    // If the result alpha is zero, return a fully transparent color
-    if (outAlpha === 0) {
-        return [0, 0, 0, 0];
-    }
-
-    // Blend the RGB values using the alpha blending formula
-    const outRed = (srcColor[0] * srcAlpha + dstColor[0] * dstAlpha * (1 - srcAlpha)) / outAlpha;
-    const outGreen = (srcColor[1] * srcAlpha + dstColor[1] * dstAlpha * (1 - srcAlpha)) / outAlpha;
-    const outBlue = (srcColor[2] * srcAlpha + dstColor[2] * dstAlpha * (1 - srcAlpha)) / outAlpha;
-
-    return [outRed, outGreen, outBlue, outAlpha];
 }

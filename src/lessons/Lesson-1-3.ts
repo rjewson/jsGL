@@ -8,12 +8,13 @@ import textureURL from '../assets/texture.png';
 function drawTexturedTriangle(db: DrawingBuffer, vertices: Point[], uvs: UV[], sampler: Sampler) {
     const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], db.clip.clipTL, db.clip.clipBR);
     // Colour array to store and pass around
+    const interpolatedUV: UV = [0, 0];
     const sampledColour: Colour = [0, 0, 0, 0];
     for (const fragment of fragments) {
         // 1-3 interpolate the cUV
-        const interpolatedUV = blendBC(fragment.bc, uvs) as UV;
+        blendBC(fragment.bc, uvs, interpolatedUV) as UV;
         // 1-3 sample the texture with the interpolated UV
-        sampler.sample(...interpolatedUV, sampledColour);
+        sampler.sample(interpolatedUV[0], interpolatedUV[1], sampledColour);
         // Write the fragment colour to the frame buffer
         db.set(...fragment.position, sampledColour);
     }

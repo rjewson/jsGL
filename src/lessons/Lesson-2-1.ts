@@ -49,10 +49,11 @@ function drawTexturedTriangle(
 
         const fragments = rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR);
         // Colour array to store and pass around
+        const interpolatedUV: UV = [0, 0];
         const gl_FragColor: Colour = [0, 0, 0, 0];
 
         for (const fragment of fragments) {
-            const interpolatedUV = blendBC(fragment.bc, uvsForBlending) as UV;
+            blendBC(fragment.bc, uvsForBlending, interpolatedUV) as UV;
             // Call the fragment shader for each fragement
             fragmentShader(interpolatedUV, uniforms, gl_FragColor)
             fb.set(...fragment.position, gl_FragColor);

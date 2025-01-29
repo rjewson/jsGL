@@ -9,7 +9,7 @@ function drawMultiColourTriangle(db: DrawingBuffer, vertices: Point[], colours: 
     const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], db.clip.clipTL, db.clip.clipBR);
     for (const fragment of fragments) {
         // 1-2 interpolate the colour
-        const interpolatedColour = blendBC(fragment.bc, colours) as Colour;
+        const interpolatedColour = blendBC(fragment.bc, colours, [0, 0, 0, 0]) as Colour;
         // Write the fragment colour to the frame buffer
         db.set(...fragment.position, interpolatedColour);
     }

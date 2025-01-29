@@ -94,13 +94,11 @@ export function drawTriangles(
 
     for (const fragment of fragments) {
 
-      const [x, y] = fragment.position;
-
-      fragmentVarying.uv = blendBC(fragment.bc, varyingUV) as UV;
+      blendBC(fragment.bc, varyingUV, fragmentVarying.uv) as UV;
 
       fragmentShader(fragmentVarying, uniforms, gl_FragColor);
 
-      fb.set(x, y, gl_FragColor);
+      fb.set(fragment.position[0], fragment.position[1], gl_FragColor);
 
     }
   }
