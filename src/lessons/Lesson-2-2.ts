@@ -1,4 +1,4 @@
-import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
 import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
 import { Sampler, SamplerIndex } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
@@ -48,7 +48,7 @@ export function fragmentShader(varying: Varying, uniforms: Uniforms, gl_FragColo
 // Final version, will be used in all future lessons
 // Note that this is very specific to the single use case of texture triangles
 export function drawTriangles(
-  fb: FrameBuffer,
+  fb: DrawingBuffer,
   count: number,
   buffers: Buffers,
   uniforms: Uniforms,
@@ -106,7 +106,7 @@ export function drawTriangles(
   }
 }
 
-export async function lesson2_2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson2_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   // 2 triangles
   const vertex: Point[] = [
@@ -131,8 +131,8 @@ export async function lesson2_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const params: RenderParams = { blendMode: BlendMode.Normal };
 
   // Draw call
-  drawTriangles(fb, 2, { vertex, uv }, uniforms, vertexShader, fragmentShader, params);
+  drawTriangles(db, 2, { vertex, uv }, uniforms, vertexShader, fragmentShader, params);
 
-  fb.write(screenCtx);
+  db.write(screenCtx);
 
 }

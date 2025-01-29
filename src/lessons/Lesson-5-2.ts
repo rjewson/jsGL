@@ -1,4 +1,4 @@
-import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
 import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
 import greenBallonTextureURL from '../assets/BalloonGreen.webp';
@@ -9,11 +9,11 @@ import { Sprite } from "../pixi/Sprite";
 import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
-import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
+import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 import { onTick } from "../utils/Ticker";
 
 // Example 2 - Simple displaylist example. 1 Sprite with 1 texture and 1 child sprite with second texture
-export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson5_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };
@@ -45,20 +45,20 @@ export async function lesson5_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   stage.addChild(sprite);
   sprite.addChild(sprite2);
 
-  function draw(fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
+  function draw(db: DrawingBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
     sampler.bind(texture);
     params.blendMode = blendMode;
-    drawTriangles(fb, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
+    drawTriangles(db, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
     drawCallsPerFrame++;
   }
 
   const tick = (dt: number, step: number) => {
-    fb.clear();
-    drawDisplayList(fb, stage, draw);
+    db.clear();
+    drawDisplayList(db, stage, draw);
     sprite.position.x = 150 + Math.sin(step / 300) * 50;
     sprite.rotation += 0.01;
     sprite2.rotation += 0.01;
-    fb.write(screenCtx);
+    db.write(screenCtx);
     return true;
   }
   onTick(tick);

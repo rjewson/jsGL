@@ -1,21 +1,21 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { DrawingBuffer } from "../lib/DrawingBuffer";
 import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
 import { BLUE, Colour, GREEN, Point, RED } from "../lib/Types";
 import { createPane } from "../utils/Options";
 
 // Examples 1-2 of drawing a single multi colour triangle
 
-function drawMultiColourTriangle(fb: FrameBuffer, vertices: Point[], colours: Colour[]) {
-    const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], fb.clip.clipTL, fb.clip.clipBR);
+function drawMultiColourTriangle(db: DrawingBuffer, vertices: Point[], colours: Colour[]) {
+    const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], db.clip.clipTL, db.clip.clipBR);
     for (const fragment of fragments) {
         // 1-2 interpolate the colour
         const interpolatedColour = blendBC(fragment.bc, colours) as Colour;
         // Write the fragment colour to the frame buffer
-        fb.set(...fragment.position, interpolatedColour);
+        db.set(...fragment.position, interpolatedColour);
     }
 }
 
-export async function lesson1_2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson1_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
     const triangleVerticies: Point[] = [
         [100, 75], [100, 175], [200, 175]
@@ -41,13 +41,13 @@ export async function lesson1_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
             colours[0] = [lessonOptions.v1.r, lessonOptions.v1.g, lessonOptions.v1.b, 255];
             colours[1] = [lessonOptions.v2.r, lessonOptions.v2.g, lessonOptions.v2.b, 255];
             colours[2] = [lessonOptions.v3.r, lessonOptions.v3.g, lessonOptions.v3.b, 255];
-            drawMultiColourTriangle(fb, triangleVerticies, colours);
-            fb.write(screenCtx);
+            drawMultiColourTriangle(db, triangleVerticies, colours);
+            db.write(screenCtx);
         });
     });
     // end tweekpane
 
-    drawMultiColourTriangle(fb, triangleVerticies, colours);
-    fb.write(screenCtx);
+    drawMultiColourTriangle(db, triangleVerticies, colours);
+    db.write(screenCtx);
 
 }

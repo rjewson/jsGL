@@ -1,24 +1,13 @@
-import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
 import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
 import { Point, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { onTick } from "../utils/Ticker";
+import { transformVerticies } from "./Lesson-3-1";
 
-function modifyVertex(vertex: Point[], angle: number, scale: number, offset: Point): Point[] {
-  const newVertex: Point[] = [];
-  for (const v of vertex) {
-    const x = v[0];
-    const y = v[1];
-    const newX = x * Math.cos(angle) - y * Math.sin(angle);
-    const newY = x * Math.sin(angle) + y * Math.cos(angle);
-    newVertex.push([newX * scale + offset[0], newY * scale + offset[1]]);
-  }
-  return newVertex;
-}
-
-export async function lesson3_2(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson3_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   // Load the texture
   const texture = await loadTexture(textureURL);
@@ -46,15 +35,15 @@ export async function lesson3_2(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   let offsetY = 0;
 
   function tick(dt:number, step:number) {
-    fb.clear();
+    db.clear();
     scale = Math.sin(step / 600) * 50 + 50;
     angle = step / 600;
     offsetX = Math.sin(step / 600) * 50 + 150;
     offsetY = Math.cos(step / 600) * 50 + 75;
-    const newVertex: Point[] = [...modifyVertex(vertex, angle, scale, [offsetX, offsetY])];
-    drawTriangles(fb, 2, { vertex: newVertex, uv }, uniforms, vertexShader, fragmentShader, params);
+    const newVertex: Point[] = [...transformVerticies(vertex, angle, scale, [offsetX, offsetY])];
+    drawTriangles(db, 2, { vertex: newVertex, uv }, uniforms, vertexShader, fragmentShader, params);
 
-    fb.write(screenCtx);
+    db.write(screenCtx);
     return true;
   }
 

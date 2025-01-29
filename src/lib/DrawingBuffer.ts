@@ -7,7 +7,7 @@ export enum BlendMode {
     Multiply
 }
 
-export class FrameBuffer extends ImageData {
+export class DrawingBuffer extends ImageData {
 
     public clip: Clip;
     private defaultClip: Clip;

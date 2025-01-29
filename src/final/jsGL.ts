@@ -1,4 +1,4 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { DrawingBuffer } from "../lib/DrawingBuffer";
 import { Sampler, SamplerIndex } from "../lib/Sampler";
 import { Point, UV } from "../lib/Types";
 
@@ -30,11 +30,11 @@ export class Program {}
 
 export class jsGL {
 
-    frameBuffer: FrameBuffer;
+    frameBuffer: DrawingBuffer;
     samplers: Sampler[];
     
     constructor() {
-        this.frameBuffer = new FrameBuffer(1024, 1024);
+        this.frameBuffer = new DrawingBuffer(1024, 1024);
         this.samplers = [new Sampler(), new Sampler()];
     }
 

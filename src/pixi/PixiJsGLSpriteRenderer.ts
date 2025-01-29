@@ -1,4 +1,4 @@
-import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
 import { Texture } from "../lib/Texture";
 import { Point } from "../lib/Types";
 import { Container } from "./Container";
@@ -22,7 +22,7 @@ for (let i = 0; i < uvData.length; i++) {
     uvData[i] = [0, 0];
 }
 
-export function drawDisplayList(fb: FrameBuffer, stage: Stage, draw: (fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) => void) {
+export function drawDisplayList(fb: DrawingBuffer, stage: Stage, draw: (fb: DrawingBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) => void) {
     // Each display list item updates its transform
     stage.updateTransform();
 

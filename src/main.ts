@@ -11,7 +11,7 @@ import { lesson5_3 } from "./lessons/Lesson-5-3";
 import { lesson5_4 } from "./lessons/Lesson-5-4";
 import { lesson5_5 } from "./lessons/Lesson-5-5";
 import { lesson5_6 } from "./lessons/Lesson-5-6";
-import { FrameBuffer } from "./lib/FrameBuffer";
+import { DrawingBuffer } from "./lib/DrawingBuffer";
 
 import "./styles.css";
 import { disposePane } from "./utils/Options";
@@ -22,9 +22,9 @@ canvas.width = 300;
 canvas.height = 250;
 const screenCtx = canvas.getContext("2d");
 
-const frameBuffer: FrameBuffer = new FrameBuffer(canvas.width, canvas.height);
+const drawingBuffer: DrawingBuffer = new DrawingBuffer(canvas.width, canvas.height);
 
-const lessons: { [key: string]: (screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) => Promise<void> } = {
+const lessons: { [key: string]: (screenCtx: CanvasRenderingContext2D, fb: DrawingBuffer) => Promise<void> } = {
     "1-1": lesson1_1,
     "1-2": lesson1_2,
     "1-3": lesson1_3,
@@ -57,10 +57,10 @@ function locationHashChanged() {
         console.clear();
         console.log("Lesson " + urlLesson);
         clearOnTick();
-        frameBuffer.clear();
+        drawingBuffer.clear();
         disposePane();
 
-        (lessons[urlLesson as keyof typeof lessons])(screenCtx, frameBuffer);
+        (lessons[urlLesson as keyof typeof lessons])(screenCtx, drawingBuffer);
     } else {
         window.location.hash = "1-1";
     } 

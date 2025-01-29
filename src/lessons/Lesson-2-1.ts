@@ -1,4 +1,4 @@
-import { FrameBuffer } from "../lib/FrameBuffer";
+import { DrawingBuffer } from "../lib/DrawingBuffer";
 import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
 import { Sampler } from "../lib/Sampler";
 import { loadTexture } from "../lib/Texture";
@@ -22,7 +22,7 @@ function fragmentShader(interpolatedUV: UV, uniforms: Uniforms, gl_FragColor: Co
 }
 
 function drawTexturedTriangle(
-    fb: FrameBuffer,
+    fb: DrawingBuffer,
     count: number,
     vertices: Point[],
     uvs: UV[],
@@ -60,7 +60,7 @@ function drawTexturedTriangle(
     }
 }
 
-export async function lesson2_1(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson2_1(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
     const vertex: Point[] = [
         [50, 50], [50, 150], [150, 150],
@@ -76,8 +76,8 @@ export async function lesson2_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     const sampler = new Sampler();
     sampler.bind(texture);
 
-    drawTexturedTriangle(fb, 2, vertex, uv, vertexShader, fragmentShader, { sampler });
+    drawTexturedTriangle(db, 2, vertex, uv, vertexShader, fragmentShader, { sampler });
 
-    fb.write(screenCtx);
+    db.write(screenCtx);
 
 }

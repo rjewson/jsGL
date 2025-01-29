@@ -1,4 +1,4 @@
-import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
 import { Sampler } from "../lib/Sampler";
 import greenBallonTextureURL from '../assets/BalloonGreen.webp';
 import redBallonTextureURL from '../assets/BalloonRed.webp';
@@ -10,12 +10,12 @@ import { Sprite } from "../pixi/Sprite";
 import { SpriteTexture } from "../pixi/SpriteTexture";
 import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
-import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
+import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 import { createPane } from "../utils/Options";
 
 
 
-export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson5_3(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };
@@ -28,10 +28,10 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const redBallonSourceTexture = await loadTexture(redBallonTextureURL);
   const ballonsSpritesSheetSourceTexture = await loadTexture(ballonSpritesheetURL);
 
-  function draw(fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
+  function draw(db: DrawingBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
     sampler.bind(texture);
     params.blendMode = blendMode;
-    drawTriangles(fb, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
+    drawTriangles(db, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
     drawCallsPerFrame++;
   }
 
@@ -99,8 +99,8 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, fb: FrameBu
       stage.addChild(ballon);
     }
 
-    drawDisplayList(fb, stage, draw);
-    fb.write(screenCtx);
+    drawDisplayList(db, stage, draw);
+    db.write(screenCtx);
     console.log("Draw Calls = ", drawCallsPerFrame);
     lessonOptions.drawCalls = drawCallsPerFrame;
     drawCallsPerFrame = 0;

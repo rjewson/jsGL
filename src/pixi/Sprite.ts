@@ -1,4 +1,4 @@
-import { BlendMode } from "../lib/FrameBuffer";
+import { BlendMode } from "../lib/DrawingBuffer";
 import { Point } from "../lib/Types";
 import { Container } from "./Container";
 import { SpriteTexture } from "./SpriteTexture";

@@ -1,4 +1,4 @@
-import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
 import { Sampler } from "../lib/Sampler";
 import gameFontURL from '../assets/font.png';
 import { Point } from "../lib/Types";
@@ -6,13 +6,13 @@ import { loadTexture, Texture } from "../lib/Texture";
 import { Stage } from "../pixi/Stage";
 import { Sprite } from "../pixi/Sprite";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
-import { drawDisplayList } from "../pixi/PixiSpriteRenderer";
+import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 import { BitmapFont } from "../pixi/SpriteSheet";
 import { fontConfig } from "../assets/font";
-import { easeOutBack, tween } from "../utils/Tween";
+import { delay, easeOutBack, tween, TweenConfig } from "../utils/Tween";
 import { onTick } from "../utils/Ticker";
 
-export async function lesson5_6(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson5_6(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };
@@ -28,10 +28,10 @@ export async function lesson5_6(screenCtx: CanvasRenderingContext2D, fb: FrameBu
   const fontSprites = new BitmapFont(gameFontTextures, fontConfig);
   fontSprites.create();
 
-  function draw(fb: FrameBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
+  function draw(db: DrawingBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
     sampler.bind(texture);
     params.blendMode = blendMode;
-    drawTriangles(fb, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
+    drawTriangles(db, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
     drawCallsPerFrame++;
   }
 
@@ -49,45 +49,67 @@ export async function lesson5_6(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     });
   }
 
-  
 
-  function initText(text: string, y: number, startX: number, time: number): Sprite[] {
-    const positions = calcCenteredPosition(320, text, 3);
-
-    const sprites: Sprite[] = text.split("").map((l, i) => {
+  function initText(text: string, y: number, startX: number, time: number, sprites: Sprite[], onFinished: Promise<unknown>[]): Sprite[] {
+    calcCenteredPosition(320, text, 3).forEach((x, i) => {
       const sprite = new Sprite();
-      sprite.texture = fontSprites.textures.get(l.toUpperCase());
+      sprite.texture = fontSprites.textures.get(text.charAt(i).toUpperCase());
       sprite.scale.setTo(3, 3);
       sprite.anchor.setTo(0.5, 0.5);
-
-      sprite.position.x = startX + (i*100);
-      tween(sprite.position, "x", positions[i], time, easeOutBack);
-
+      sprite.position.x = startX + (i * 100);
       sprite.position.y = y;
       stage.addChild(sprite);
-      return sprite;
+
+      onFinished.push(tween(sprite.position, "x", x, time, easeOutBack));
+      sprites.push(sprite);
     });
     return sprites;
   }
-  const letters: Sprite[] = [...initText("Thanks", 100, 400, 2000), ...initText("for", 125, -600, 2000), ...initText("watching", 150, 600, 3000)];
+
+  const letters: Sprite[] = [];
+  const onFinished: Promise<unknown>[] = [];
+  initText("Thanks", 100, 400, 2000, letters, onFinished);
+  initText("for", 125, -600, 2000, letters, onFinished);
+  initText("watching", 150, 600, 3000, letters, onFinished);
+
+  let phase = 0;
 
   const tick
-    = (dt: number, step:number) => {
-      fb.clear();
+    = (dt: number, step: number) => {
+      db.clear();
 
-      letters.forEach((l, i) => {
-        l.scale.x = 3 + Math.sin(step / 100 + i) * 0.75;
-        l.scale.y = 3 + Math.cos(step / 100 + i) * 0.5;
-        l.rotation = Math.sin((step + i) / 100) * 0.15;
-      });
+      if (phase === 0) {
+        letters.forEach((l, i) => {
+          l.scale.x = 3 + Math.sin(step / 100 + i) * 0.75;
+          l.scale.y = 3 + Math.cos(step / 100 + i) * 0.5;
+          l.rotation = Math.sin((step + i) / 100) * 0.15;
+        });
+      } else {
+        const angleStep = Math.PI * 2 / letters.length;
+        letters.forEach((l, i) => {
+          const r = step / 1000;
+          const radius = 100 + (1 + Math.sin(r)*30);
+          l.scale.x = 3;
+          l.scale.y = 3;
+          l.rotation += 0.01;
+          const tX = 150 + Math.cos(r+angleStep*i) * radius;
+          const tY = 125 + Math.sin(r+angleStep*i) * radius;
+          l.position.x += (tX - l.position.x)*0.01;
+          l.position.y += (tY - l.position.y)*0.01;
+        });
+      }
 
-      drawDisplayList(fb, stage, draw);
-      fb.write(screenCtx);
+      drawDisplayList(db, stage, draw);
+      db.write(screenCtx);
       console.log("Draw Calls = ", drawCallsPerFrame);
       drawCallsPerFrame = 0;
       return true;
     }
 
   onTick(tick);
-
+  await Promise.all(onFinished);
+  await delay(2000);
+  letters.reverse();
+  // letters.sort(() => Math.random() - 0.5);
+  phase = 1;
 }

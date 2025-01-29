@@ -1,11 +1,11 @@
-import { BlendMode, FrameBuffer } from "../lib/FrameBuffer";
+import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
 import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
 import { Point, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 
-function modifyVertex(vertex: Point[], angle: number, scale: number, offset: Point): Point[] {
+export function transformVerticies(vertex: Point[], angle: number, scale: number, offset: Point): Point[] {
   const newVertex: Point[] = [];
   for (const v of vertex) {
     const x = v[0];
@@ -17,7 +17,7 @@ function modifyVertex(vertex: Point[], angle: number, scale: number, offset: Poi
   return newVertex;
 }
 
-export async function lesson3_1(screenCtx: CanvasRenderingContext2D, fb: FrameBuffer) {
+export async function lesson3_1(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   // Load the texture
   const texture = await loadTexture(textureURL);
@@ -52,7 +52,7 @@ export async function lesson3_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
     const angle = Math.random() * Math.PI * 2;
     const scale = Math.random() * 50 + 10;
 
-    newVertex.push(...modifyVertex(vertex, angle, scale, [xOffset, yOffset]));
+    newVertex.push(...transformVerticies(vertex, angle, scale, [xOffset, yOffset]));
     newUV.push(...(Math.random() > 0.5 ? uv1 : uv2));
   }
 
@@ -62,8 +62,8 @@ export async function lesson3_1(screenCtx: CanvasRenderingContext2D, fb: FrameBu
 
   const params: RenderParams = { blendMode: BlendMode.Normal };
 
-  drawTriangles(fb, count*2, { vertex: newVertex, uv: newUV }, uniforms, vertexShader, fragmentShader, params);
+  drawTriangles(db, count*2, { vertex: newVertex, uv: newUV }, uniforms, vertexShader, fragmentShader, params);
 
-  fb.write(screenCtx);
+  db.write(screenCtx);
 
 }

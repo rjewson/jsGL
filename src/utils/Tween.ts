@@ -46,3 +46,9 @@ export function tween(target: { [key: string]: any }, property: string, targetVa
     onTick(update);
     return result;
 }
+
+export function delay(time: number) {
+    return new Promise(res => {
+        setTimeout(res, time);
+    });
+};
