@@ -1,16 +1,18 @@
 import { DrawingBuffer } from "../lib/DrawingBuffer";
-import { rasterizeTriangle } from "../lib/Rasterizer";
-import { Colour, Point } from "../lib/Types";
+import { rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
+import { BarycentricPoint, Colour, Point } from "../lib/Types";
 
 // Examples 1-1 of drawing a single colour triangle
 
 function drawSingleColourTriangle(db: DrawingBuffer, vertices: Point[], colour: Colour) {
-    const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], db.clip.clipTL, db.clip.clipBR);
-    for (const fragment of fragments) {
+    let fragmentCount = 0;
+    const fn: RenderFn = (x: number, y: number, bc: BarycentricPoint) => {
         // Write the fragment colour to the frame buffer
-        db.set(...fragment.position, colour);
+        db.set(x,y, colour);
+        fragmentCount++;
     } 
-    console.log("Fragment counts = "+fragments.length);
+    rasterizeTriangle(vertices[0], vertices[1], vertices[2], db.clip.clipTL, db.clip.clipBR,fn);
+    console.log("Fragment counts = "+fragmentCount);
 }
 
 export async function lesson1_1(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {

@@ -1,23 +1,23 @@
 import { DrawingBuffer } from "../lib/DrawingBuffer";
-import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
+import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
 import { Sampler } from "../lib/Sampler";
 import { loadTexture } from "../lib/Texture";
-import { Colour, Point, UV } from "../lib/Types";
+import { BarycentricPoint, Colour, Point, UV } from "../lib/Types";
 import textureURL from '../assets/texture.png';
 
 function drawTexturedTriangle(db: DrawingBuffer, vertices: Point[], uvs: UV[], sampler: Sampler) {
-    const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], db.clip.clipTL, db.clip.clipBR);
     // Colour array to store and pass around
     const interpolatedUV: UV = [0, 0];
     const sampledColour: Colour = [0, 0, 0, 0];
-    for (const fragment of fragments) {
+    const fn: RenderFn = (x: number, y: number, bc: BarycentricPoint) => {
         // 1-3 interpolate the cUV
-        blendBC(fragment.bc, uvs, interpolatedUV) as UV;
+        blendBC(bc, uvs, interpolatedUV) as UV;
         // 1-3 sample the texture with the interpolated UV
         sampler.sample(interpolatedUV[0], interpolatedUV[1], sampledColour);
         // Write the fragment colour to the frame buffer
-        db.set(...fragment.position, sampledColour);
+        db.set(x, y, sampledColour);
     }
+    rasterizeTriangle(vertices[0], vertices[1], vertices[2], db.clip.clipTL, db.clip.clipBR, fn);
 }
 
 export async function lesson1_3(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {

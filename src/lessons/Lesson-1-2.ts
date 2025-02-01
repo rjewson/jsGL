@@ -1,18 +1,18 @@
 import { DrawingBuffer } from "../lib/DrawingBuffer";
-import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
-import { BLUE, Colour, GREEN, Point, RED } from "../lib/Types";
+import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
+import { BarycentricPoint, BLUE, Colour, GREEN, Point, RED } from "../lib/Types";
 import { createPane } from "../utils/Options";
 
 // Examples 1-2 of drawing a single multi colour triangle
 
 function drawMultiColourTriangle(db: DrawingBuffer, vertices: Point[], colours: Colour[]) {
-    const fragments = rasterizeTriangle(vertices[0], vertices[1], vertices[2], db.clip.clipTL, db.clip.clipBR);
-    for (const fragment of fragments) {
+    const fn: RenderFn = (x: number, y: number, bc: BarycentricPoint) => {
         // 1-2 interpolate the colour
-        const interpolatedColour = blendBC(fragment.bc, colours, [0, 0, 0, 0]) as Colour;
+        const interpolatedColour = blendBC(bc, colours, [0, 0, 0, 0]) as Colour;
         // Write the fragment colour to the frame buffer
-        db.set(...fragment.position, interpolatedColour);
+        db.set(x, y, interpolatedColour);
     }
+    rasterizeTriangle(vertices[0], vertices[1], vertices[2], db.clip.clipTL, db.clip.clipBR, fn);
 }
 
 export async function lesson1_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {

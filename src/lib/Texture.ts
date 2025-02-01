@@ -1,7 +1,13 @@
 export class Texture extends ImageData {
 
+    //Faster than using base class width and height
+    public _width: number;
+    public _height: number;
+
     constructor(imageData: ImageData) {
         super(imageData.data, imageData.width, imageData.height);
+        this._width = imageData.width;
+        this._height = imageData.height;
     }
 }
 

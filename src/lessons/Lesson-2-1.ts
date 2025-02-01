@@ -1,8 +1,8 @@
 import { DrawingBuffer } from "../lib/DrawingBuffer";
-import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
+import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
 import { Sampler } from "../lib/Sampler";
 import { loadTexture } from "../lib/Texture";
-import { Colour, Point, UV } from "../lib/Types";
+import { BarycentricPoint, Colour, Point, UV } from "../lib/Types";
 import textureURL from '../assets/texture.png';
 
 type Uniforms = {
@@ -47,17 +47,17 @@ function drawTexturedTriangle(
 
         const uvsForBlending = [uv1, uv2, uv3];
 
-        const fragments = rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR);
         // Colour array to store and pass around
         const interpolatedUV: UV = [0, 0];
         const gl_FragColor: Colour = [0, 0, 0, 0];
 
-        for (const fragment of fragments) {
-            blendBC(fragment.bc, uvsForBlending, interpolatedUV) as UV;
+        const fn: RenderFn = (x: number, y: number, bc: BarycentricPoint) => {
+            blendBC(bc, uvsForBlending, interpolatedUV) as UV;
             // Call the fragment shader for each fragement
             fragmentShader(interpolatedUV, uniforms, gl_FragColor)
-            fb.set(...fragment.position, gl_FragColor);
+            fb.set(x, y, gl_FragColor);
         }
+        rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR, fn);
     }
 }
 
@@ -66,12 +66,12 @@ export async function lesson2_1(screenCtx: CanvasRenderingContext2D, db: Drawing
     const vertex: Point[] = [
         [50, 50], [50, 150], [150, 150],
         [60, 50], [160, 150], [160, 50]
-      ];
-    
-      const uv: UV[] = [
+    ];
+
+    const uv: UV[] = [
         [0, 0], [0, 0.24], [0.24, 0.24],
         [0, 0], [0.24, 0.24], [0.24, 0]
-      ];
+    ];
 
     const texture = await loadTexture(textureURL);
     const sampler = new Sampler();

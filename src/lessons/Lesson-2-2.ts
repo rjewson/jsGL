@@ -1,9 +1,11 @@
 import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
-import { blendBC, rasterizeTriangle } from "../lib/Rasterizer";
+import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
 import { Sampler, SamplerIndex } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
-import { Colour, EMPTY_UV, Point, UV } from "../lib/Types";
+import { BarycentricPoint, Colour, EMPTY_UV, Point, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
+import { rasterizeTriangle2 } from "../lib/Rasterizer2";
+import { rasterizeTriangle3 } from "../lib/new";
 
 export type Buffers = {
   vertex: Point[];
@@ -42,6 +44,7 @@ export function vertexShader(attributes: Attributes, uniforms: Uniforms, varying
 export function fragmentShader(varying: Varying, uniforms: Uniforms, gl_FragColor: Colour): void {
   // write the interpolated varying colour value unchanged into the fragment colour
   uniforms.sampler.sample(varying.uv[0], varying.uv[1], gl_FragColor);
+  // gl_FragColor[3]=128;
 }
 
 // Draw call to WebGL
@@ -54,8 +57,7 @@ export function drawTriangles(
   uniforms: Uniforms,
   vertexShader: VertexShader,
   fragmentShader: FragmentShader,
-  params: RenderParams) 
-{
+  params: RenderParams) {
   // Set the 'webgl' params
   fb.blendMode(params.blendMode);
 
@@ -82,8 +84,6 @@ export function drawTriangles(
     const processedVertex3: Point = [0, 0];
     vertexShader({ vertex: vertex3, uv: uv3 }, uniforms, varying3, processedVertex3);
 
-    const fragments = rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR);
-
 
     const varyingUV: UV[] = [
       varying1.uv, varying2.uv, varying3.uv
@@ -92,15 +92,14 @@ export function drawTriangles(
     const gl_FragColor: Colour = [0, 0, 0, 0];
     const fragmentVarying = { uv: [0, 0] as UV };
 
-    for (const fragment of fragments) {
-
-      blendBC(fragment.bc, varyingUV, fragmentVarying.uv) as UV;
-
+    const fn:RenderFn = (x: number, y: number, bc: BarycentricPoint) => {
+      blendBC(bc, varyingUV, fragmentVarying.uv) as UV;
       fragmentShader(fragmentVarying, uniforms, gl_FragColor);
-
-      fb.set(fragment.position[0], fragment.position[1], gl_FragColor);
-
+      fb.set(x, y, gl_FragColor);
     }
+
+    rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR, fn);
+
   }
 }
 
