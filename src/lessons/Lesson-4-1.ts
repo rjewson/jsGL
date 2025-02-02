@@ -10,7 +10,7 @@ import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 
-export async function lesson5_1(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
+export async function lesson4_1(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };
@@ -24,6 +24,7 @@ export async function lesson5_1(screenCtx: CanvasRenderingContext2D, db: Drawing
   const stage = new Stage();
 
   const spriteTexture = new SpriteTexture(texture, new Rectangle(0, 0, (1024 / 8) - 1, (1024 / 8) - 1));
+
   const sprite = new Sprite();
   sprite.texture = spriteTexture;
   sprite.position.x = 75;

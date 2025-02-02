@@ -2,8 +2,9 @@ import { Clip } from "./Clip";
 import { Colour, Point } from "./Types";
 
 export enum BlendMode {
+    Over,
     Normal,
-    Add
+    Add,
 }
 
 export type BlendFn = (data: Uint8ClampedArray, colour: Colour, index: number) => void;
@@ -30,32 +31,11 @@ export class DrawingBuffer extends ImageData {
     }
 
     set(x: number, y: number, colour: Colour): void {
-        // Overwrite the existing pixel data unless the new pixel is fully transparent
-        // var index = 4 * (x + y * this.width);
+        // if alpha is 0, don't draw
         if (colour[3] === 0) {
             return;
         }
-        // // This is faster than setting the individual RGBA values
-        // this.data.set(colour, index);
-
-        // Blend the new pixel correctly with alpha blending
         const index = 4 * (x + y * this._width);
-        // const alpha = colour[3] / 255;
-        // const invAlpha = 1 - alpha;
-
-        // var existingColour_r = this.data[index];
-        // var existingColour_g = this.data[index+1];
-        // var existingColour_b = this.data[index+2];
-        // var existingColour_a = this.data[index+3];
-        // this.data[index] = Math.round(colour[0] * alpha + existingColour_r * invAlpha);
-        // this.data[index + 1] = Math.round(colour[1] * alpha + existingColour_g * invAlpha);
-        // this.data[index + 2] = Math.round(colour[2] * alpha + existingColour_b * invAlpha);
-        // this.data[index + 3] = Math.round(colour[3] + existingColour_a * invAlpha);
-
-        // colour[0] = Math.round(colour[0] * alpha + this.data[index] * invAlpha);
-        // colour[1] = Math.round(colour[1] * alpha + this.data[index + 1] * invAlpha);
-        // colour[2] = Math.round(colour[2] * alpha + this.data[index + 2] * invAlpha);
-        // colour[3] = Math.round(colour[3] + this.data[index + 3] * invAlpha);
         this.blendFn(this.data, colour, index);
         this.data.set(colour, index);
 
@@ -73,7 +53,7 @@ export class DrawingBuffer extends ImageData {
         if (mode != this.blend) {
             console.log("Blending set to " + BlendMode[mode]);
             this.blend = mode;
-            this.blendFn = mode === BlendMode.Normal ? blendNormal : blendAdd;
+            this.blendFn = blendFunctions[mode];
         }
     }
 
@@ -85,6 +65,16 @@ export class DrawingBuffer extends ImageData {
         this.clip = this.defaultClip;
     }
 
+}
+
+const blendFunctions = {
+    [BlendMode.Over]: blendOver,
+    [BlendMode.Normal]: blendNormal,
+    [BlendMode.Add]: blendAdd,
+}
+
+function blendOver(data: Uint8ClampedArray, colour: Colour, index: number) {
+    // Leave the source colour as is
 }
 
 function blendNormal(data: Uint8ClampedArray, colour: Colour, index: number) {

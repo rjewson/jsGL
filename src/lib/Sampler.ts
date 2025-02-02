@@ -32,7 +32,6 @@ export class Sampler {
         }
         this.prevX = x; this.prevY = y;
         const cell = y * (this.textureWidth * 4) + x * 4;
-        // return [this.texture.imageData.data[cell + 0], this.texture.imageData.data[cell + 1], this.texture.imageData.data[cell + 2], this.texture.imageData.data[cell + 3]];
         result[0] = this.texture.data[cell + 0];
         result[1] = this.texture.data[cell + 1];
         result[2] = this.texture.data[cell + 2];

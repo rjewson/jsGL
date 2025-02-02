@@ -98,7 +98,7 @@ export function drawTriangles(
       fb.set(x, y, gl_FragColor);
     }
 
-    rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR, fn);
+    rasterizeTriangle2(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR, fn);
 
   }
 }
@@ -112,8 +112,8 @@ export async function lesson2_2(screenCtx: CanvasRenderingContext2D, db: Drawing
   ];
 
   const uv: UV[] = [
-    [0, 0], [0, 0.24], [0.24, 0.24],
-    [0, 0], [0.24, 0.24], [0.24, 0]
+    [0, 0], [0, 0.2499], [0.2499, 0.2499],
+    [0, 0], [0.2499, 0.2499], [0.2499, 0]
   ];
 
   // Load texture

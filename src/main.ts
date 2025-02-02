@@ -5,8 +5,8 @@ import { lesson2_1 } from "./lessons/Lesson-2-1";
 import { lesson2_2 } from "./lessons/Lesson-2-2";
 import { lesson3_1 } from "./lessons/Lesson-3-1";
 import { lesson3_2 } from "./lessons/Lesson-3-2";
-import { lesson5_1 } from "./lessons/Lesson-5-1";
-import { lesson5_2 } from "./lessons/Lesson-5-2";
+import { lesson4_1 } from "./lessons/Lesson-4-1";
+import { lesson4_2 } from "./lessons/Lesson-4-2";
 import { lesson5_3 } from "./lessons/Lesson-5-3";
 import { lesson5_4 } from "./lessons/Lesson-5-4";
 import { lesson5_5 } from "./lessons/Lesson-5-5";
@@ -33,8 +33,8 @@ const lessons: { [key: string]: (screenCtx: CanvasRenderingContext2D, fb: Drawin
     "2-2": lesson2_2,
     "3-1": lesson3_1,
     "3-2": lesson3_2,
-    "5-1": lesson5_1,
-    "5-2": lesson5_2,
+    "4-1": lesson4_1,
+    "4-2": lesson4_2,
     "5-3": lesson5_3,
     "5-4": lesson5_4,
     "5-5": lesson5_5,
