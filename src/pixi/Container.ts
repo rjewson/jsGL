@@ -29,6 +29,10 @@ export class Container extends DisplayObject {
         this.children.splice(index, 1);
     }
 
+    public removeAllChildren() {
+        this.children = [];
+    }
+
     public updateTransform() {
         // super.updateTransform();
 

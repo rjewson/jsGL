@@ -7,11 +7,12 @@ import { lesson3_1 } from "./lessons/Lesson-3-1";
 import { lesson3_2 } from "./lessons/Lesson-3-2";
 import { lesson4_1 } from "./lessons/Lesson-4-1";
 import { lesson4_2 } from "./lessons/Lesson-4-2";
+import { lesson5_1 } from "./lessons/Lesson-5-1";
+import { lesson5_2 } from "./lessons/Lesson-5-2";
 import { lesson5_3 } from "./lessons/Lesson-5-3";
-import { lesson5_4 } from "./lessons/Lesson-5-4";
-import { lesson5_5 } from "./lessons/Lesson-5-5";
-import { lesson5_6 } from "./lessons/Lesson-5-6";
-import { lesson5_7 } from "./lessons/Lesson-5-7";
+import { lesson6_1 } from "./lessons/Lesson-6-1";
+import { lesson6_2 } from "./lessons/Lesson-6-2";
+import { lesson6_3 } from "./lessons/Lesson-6-3";
 import { DrawingBuffer } from "./lib/DrawingBuffer";
 
 import "./styles.css";
@@ -35,11 +36,12 @@ const lessons: { [key: string]: (screenCtx: CanvasRenderingContext2D, fb: Drawin
     "3-2": lesson3_2,
     "4-1": lesson4_1,
     "4-2": lesson4_2,
+    "5-1": lesson5_1,
+    "5-2": lesson5_2,
     "5-3": lesson5_3,
-    "5-4": lesson5_4,
-    "5-5": lesson5_5,
-    "5-6": lesson5_6,
-    "5-7": lesson5_7,
+    "6-1": lesson6_1,
+    "6-2": lesson6_2,
+    "6-3": lesson6_3,
 };
 
 // Make UI

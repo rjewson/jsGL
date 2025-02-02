@@ -2,7 +2,6 @@ import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
 import { Sampler } from "../lib/Sampler";
 import greenBallonTextureURL from '../assets/BalloonGreen.webp';
 import redBallonTextureURL from '../assets/BalloonRed.webp';
-import ballonSpritesheetURL from '../assets/spritesheet.png';
 import { Point } from "../lib/Types";
 import { loadTexture, Texture } from "../lib/Texture";
 import { Stage } from "../pixi/Stage";
@@ -12,8 +11,7 @@ import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 import { createPane } from "../utils/Options";
-
-
+import { onTick } from "../utils/Ticker";
 
 export async function lesson5_3(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
@@ -26,7 +24,11 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, db: Drawing
 
   const greenBallonSourceTexture = await loadTexture(greenBallonTextureURL);
   const redBallonSourceTexture = await loadTexture(redBallonTextureURL);
-  const ballonsSpritesSheetSourceTexture = await loadTexture(ballonSpritesheetURL);
+
+  const stage = new Stage();
+
+  const greenBallonTexture = new SpriteTexture(greenBallonSourceTexture, new Rectangle(0, 0, 105, 156));
+  const redBallonTexture = new SpriteTexture(redBallonSourceTexture, new Rectangle(0, 0, 105, 156));
 
   function draw(db: DrawingBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
     sampler.bind(texture);
@@ -36,78 +38,61 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, db: Drawing
   }
 
   // Make it dynamic with tweekpane
-  const lessonOptions = {
-    useSpriteSheet: false,
-    alternateSprites: false,
-    alternateBlendModes: false,
-    drawCalls: 0
-  };
-
   const pane = createPane();
-
-  const b0 = pane.addBinding(lessonOptions, 'useSpriteSheet');
-  const b1 = pane.addBinding(lessonOptions, 'alternateSprites');
-  const b2 = pane.addBinding(lessonOptions, 'alternateBlendModes');
-  pane.addBinding(lessonOptions, 'drawCalls', {
-    readonly: true,
-    view: 'graph',
+  const lessonOptions = {
+    count: 4,
+  };
+  const instanceCount = pane.addBinding(lessonOptions, 'count', {
     min: 0,
-    max: 20,
+    max: 9,
+    step: 1,
   });
 
-  [b0, b1, b2].forEach(b => {
-    b.on('change', (_) => {
-      renderExample(lessonOptions.useSpriteSheet, lessonOptions.alternateSprites, lessonOptions.alternateBlendModes);
-    });
-  })
+  const ballons: Sprite[] = [];
+
+  function updateStage() {
+    stage.removeAllChildren();
+    ballons.length = 0;
+    for (let count = 0; count < lessonOptions.count; count++) {
+      const ballon = new Sprite();
+      ballon.texture = count % 2 === 0 ? greenBallonTexture : redBallonTexture;
+      const gridSize = Math.ceil(Math.sqrt(lessonOptions.count));
+      const padding = 5;
+      const spriteWidth = 105 * 0.5;
+      const spriteHeight = 156 * 0.5;
+      const totalWidth = gridSize * (spriteWidth + padding) - padding;
+      const totalHeight = gridSize * (spriteHeight + padding) - padding;
+      const startX = (300 - totalWidth) / 2;
+      const startY = (250 - totalHeight) / 2;
+
+      ballon.position.x = startX + (count % gridSize) * (spriteWidth + padding) + spriteWidth / 2;
+      ballon.position.y = startY + Math.floor(count / gridSize) * (spriteHeight + padding) + spriteHeight / 2;
+      
+      ballon.scale.setTo(0.5, 0.5);
+      ballon.anchor.setTo(0.5, 0.5);
+      stage.addChild(ballon);
+      ballons.push(ballon);
+    }
+  }
+
+  instanceCount.on('change',updateStage);
+  updateStage();
   // end tweekpane
 
-  function renderExample(useSpriteSheet: boolean, alternateSprites: boolean, alternateBlendModes: boolean) {
+  const tick = (dt: number, step: number) => {
+    db.clear();
 
-    console.log("---");
-    console.log(`Render %c${useSpriteSheet}/${alternateSprites}/${alternateBlendModes}`, "color: blue;");
-
-    const stage = new Stage();
-
-    let greenBallonTexture: SpriteTexture = null;
-    let redBallonTexture: SpriteTexture = null;
-
-    if (!useSpriteSheet) {
-      // Use separate textures for each sprite
-      greenBallonTexture = new SpriteTexture(greenBallonSourceTexture, new Rectangle(0, 0, 105, 156));
-      redBallonTexture = new SpriteTexture(redBallonSourceTexture, new Rectangle(0, 0, 105, 156));
-    } else {
-      // Combine ballons into spritesheet
-      greenBallonTexture = new SpriteTexture(ballonsSpritesSheetSourceTexture, new Rectangle(0, 0, 105, 156));
-      redBallonTexture = new SpriteTexture(ballonsSpritesSheetSourceTexture, new Rectangle(109, 0, 105, 156));
-    }
-
-    for (let count = 0; count < 20; count++) {
-      const ballon = new Sprite();
-      if (alternateSprites) {
-        ballon.texture = count % 2 === 0 ? greenBallonTexture : redBallonTexture;
-      } else {
-        ballon.texture = count < 10 ? greenBallonTexture : redBallonTexture;
-      }
-      if (alternateBlendModes) {
-        ballon.blendMode = count % 2 === 0 ? BlendMode.Normal : BlendMode.Add;
-      }
-
-      ballon.position.x = count * 10
-      ballon.position.y = 50;
-
-      stage.addChild(ballon);
-    }
+    ballons.forEach((ballon, i) => {
+      ballon.rotation = Math.sin((step / 100) + i/10) * 0.1;
+    });
 
     drawDisplayList(db, stage, draw);
     db.write(screenCtx);
     console.log("Draw Calls = ", drawCallsPerFrame);
-    lessonOptions.drawCalls = drawCallsPerFrame;
     drawCallsPerFrame = 0;
+    return true;
   }
 
-  console.log("%cDraw call explorer", "color: blue;");
-  renderExample(lessonOptions.useSpriteSheet, lessonOptions.alternateSprites, lessonOptions.alternateBlendModes);
-
+  onTick(tick);
 }
 

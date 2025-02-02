@@ -12,7 +12,7 @@ import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } f
 import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 import { onTick } from "../utils/Ticker";
 
-export async function lesson5_5(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
+export async function lesson6_1(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };

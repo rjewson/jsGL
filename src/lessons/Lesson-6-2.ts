@@ -12,7 +12,7 @@ import { fontConfig } from "../assets/font";
 import { delay, easeOutBack, tween, TweenConfig } from "../utils/Tween";
 import { onTick } from "../utils/Ticker";
 
-export async function lesson5_6(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
+export async function lesson6_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };

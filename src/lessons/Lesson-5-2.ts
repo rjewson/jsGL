@@ -11,7 +11,7 @@ import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 
-export async function lesson5_4(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
+export async function lesson5_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };

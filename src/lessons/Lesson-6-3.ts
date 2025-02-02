@@ -7,14 +7,11 @@ import { Stage } from "../pixi/Stage";
 import { Sprite } from "../pixi/Sprite";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
-import { BitmapFont } from "../pixi/SpriteSheet";
-import { fontConfig } from "../assets/font";
-import { delay, easeOutBack, tween, TweenConfig } from "../utils/Tween";
 import { onTick } from "../utils/Ticker";
 import { Rectangle } from "../pixi/utils";
 import { SpriteTexture } from "../pixi/SpriteTexture";
 
-export async function lesson5_7(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
+export async function lesson6_3(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
   const sampler: Sampler = new Sampler();
   const uniforms: Uniforms = { sampler };
