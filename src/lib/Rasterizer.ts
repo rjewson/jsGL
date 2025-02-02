@@ -20,15 +20,15 @@ export function rasterizeTriangle(v0: Point, v1: Point, v2: Point, clip_p1: Poin
     const maxX = Math.ceil(Math.min(Math.max(v0x, v1x, v2x), clip_p2[0]));
     const maxY = Math.ceil(Math.min(Math.max(v0y, v1y, v2y), clip_p2[1]));
 
-    let A01 = v0y - v1y;
-    let B01 = v1x - v0x;
-    let A12 = v1y - v2y;
-    let B12 = v2x - v1x;
-    let A20 = v2y - v0y;
-    let B20 = v0x - v2x;
+    const A01 = v0y - v1y;
+    const B01 = v1x - v0x;
+    const A12 = v1y - v2y;
+    const B12 = v2x - v1x;
+    const A20 = v2y - v0y;
+    const B20 = v0x - v2x;
 
-    // // Barycentric coordinates at minX/minY corner
-    let area = orient2d(v0x,v0y, v1x,v1y, v2x,v2y);
+    // Barycentric coordinates at minX/minY corner
+    const area = 1 / orient2d(v0x,v0y, v1x,v1y, v2x,v2y);
     let w0_row = orient2d(v1x, v1y, v2x, v2y, minX, minY);
     let w1_row = orient2d(v2x, v2y, v0x, v0y, minX, minY);
     let w2_row = orient2d(v0x, v0y, v1x, v1y, minX, minY);
@@ -46,9 +46,9 @@ export function rasterizeTriangle(v0: Point, v1: Point, v2: Point, clip_p1: Poin
         for (x = minX; x <= maxX; x++) {
             // If p is on or inside all edges, render pixel.
             if (w0 >= 0 && w1 >= 0 && w2 >= 0) {
-                bc[0] = w0/area;
-                bc[1] = w1/area;
-                bc[2] = w2/area;
+                bc[0] = w0 * area;
+                bc[1] = w1 * area;
+                bc[2] = w2 * area;
                 scanning = true;
                 fn(x, y, bc);
             } else if (scanning) {  

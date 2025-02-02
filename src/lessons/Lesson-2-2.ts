@@ -56,48 +56,56 @@ export function drawTriangles(
   vertexShader: VertexShader,
   fragmentShader: FragmentShader,
   params: RenderParams) {
+
   // Set the 'webgl' params
   fb.blendMode(params.blendMode);
+
+  // Everything below here is executed on the GPU
 
   // The buffers have to be uploaded from CPU side to GPU side
   const { vertex, uv } = buffers;
 
-  // Everything below here is executed on the GPU
-  for (let index = 0; index < count * 3; index += 3) {
+  // Create the varying data structure for each vertex shader
+  // These only need to be created once per triangle batch
+  const varying1: Varying = { uv: EMPTY_UV };
+  const varying2: Varying = { uv: EMPTY_UV };
+  const varying3: Varying = { uv: EMPTY_UV };
 
+  const varyingUV: UV[] = [
+    varying1.uv, varying2.uv, varying3.uv
+  ];
+
+  const processedVertex1: Point = [0, 0];
+  const processedVertex2: Point = [0, 0];
+  const processedVertex3: Point = [0, 0];
+  
+  const gl_FragColor: Colour = [0, 0, 0, 0];
+  const fragmentVarying = { uv: [0, 0] as UV };
+
+  const fn:RenderFn = (x: number, y: number, bc: BarycentricPoint) => {
+    blendBC(bc, varyingUV, fragmentVarying.uv) as UV;
+    fragmentShader(fragmentVarying, uniforms, gl_FragColor);
+    fb.set(x, y, gl_FragColor);
+  }
+
+  for (let index = 0; index < count * 3; index += 3) {
     // Extract the 3 vertex attributes from buffer
     const { [index]: vertex1, [index + 1]: vertex2, [index + 2]: vertex3 } = vertex;
     // Extract the 3 uv attributes from buffer
     const { [index]: uv1, [index + 1]: uv2, [index + 2]: uv3 } = uv;
 
-    // Create the varying data structure for each vertex shader
-    const varying1: Varying = { uv: EMPTY_UV };
-    const varying2: Varying = { uv: EMPTY_UV };
-    const varying3: Varying = { uv: EMPTY_UV };
-
-    const processedVertex1: Point = [0, 0];
+    // Call the vertex shader for each vertex in the triangle
     vertexShader({ vertex: vertex1, uv: uv1 }, uniforms, varying1, processedVertex1);
-    const processedVertex2: Point = [0, 0];
     vertexShader({ vertex: vertex2, uv: uv2 }, uniforms, varying2, processedVertex2);
-    const processedVertex3: Point = [0, 0];
     vertexShader({ vertex: vertex3, uv: uv3 }, uniforms, varying3, processedVertex3);
+    
+    // Udapte the varying data structure with the varying data
+    varyingUV[0] = varying1.uv;
+    varyingUV[1] = varying2.uv;
+    varyingUV[2] = varying3.uv;
 
-
-    const varyingUV: UV[] = [
-      varying1.uv, varying2.uv, varying3.uv
-    ];
-
-    const gl_FragColor: Colour = [0, 0, 0, 0];
-    const fragmentVarying = { uv: [0, 0] as UV };
-
-    const fn:RenderFn = (x: number, y: number, bc: BarycentricPoint) => {
-      blendBC(bc, varyingUV, fragmentVarying.uv) as UV;
-      fragmentShader(fragmentVarying, uniforms, gl_FragColor);
-      fb.set(x, y, gl_FragColor);
-    }
-
+    // Call the rasterizer with data from the vertex shader, and the redner function
     rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR, fn);
-
   }
 }
 
