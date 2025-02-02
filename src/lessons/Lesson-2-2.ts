@@ -1,11 +1,9 @@
 import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
-import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
-import { Sampler, SamplerIndex } from "../lib/Sampler";
+import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
 import { BarycentricPoint, Colour, EMPTY_UV, Point, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
-import { rasterizeTriangle2 } from "../lib/Rasterizer2";
-import { rasterizeTriangle3 } from "../lib/new";
+import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
 
 export type Buffers = {
   vertex: Point[];
@@ -98,7 +96,7 @@ export function drawTriangles(
       fb.set(x, y, gl_FragColor);
     }
 
-    rasterizeTriangle2(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR, fn);
+    rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR, fn);
 
   }
 }
@@ -107,13 +105,13 @@ export async function lesson2_2(screenCtx: CanvasRenderingContext2D, db: Drawing
 
   // 2 triangles
   const vertex: Point[] = [
-    [50, 50], [50, 150], [150, 150],
-    [50, 50], [150, 150], [150, 50]
+    [50, 50], [150, 150], [50, 150], 
+    [50, 50], [150, 50], [150, 150], 
   ];
 
   const uv: UV[] = [
-    [0, 0], [0, 0.2499], [0.2499, 0.2499],
-    [0, 0], [0.2499, 0.2499], [0.2499, 0]
+    [0, 0], [0.2499, 0.2499], [0, 0.2499], 
+    [0, 0], [0.2499, 0], [0.2499, 0.2499] 
   ];
 
   // Load texture

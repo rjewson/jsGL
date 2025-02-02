@@ -6,7 +6,7 @@ import { BarycentricPoint, Colour, Point } from "../lib/Types";
 
 function drawSingleColourTriangle(db: DrawingBuffer, vertices: Point[], colour: Colour) {
     let fragmentCount = 0;
-    const fn: RenderFn = (x: number, y: number, bc: BarycentricPoint) => {
+    const fn: RenderFn= (x: number, y: number, bc: BarycentricPoint) => {
         // Write the fragment colour to the frame buffer
         db.set(x,y, colour);
         fragmentCount++;
@@ -20,7 +20,7 @@ export async function lesson1_1(screenCtx: CanvasRenderingContext2D, db: Drawing
     console.log("%cSimple example to draw a single colour triangle", "color: blue;");
 
     const triangleVerticies: Point[] = [
-        [100, 75], [100, 175], [200, 175]
+        [100, 75], [200, 175], [100, 175] 
     ];
 
     const RED: Colour = [255, 0, 0, 255];

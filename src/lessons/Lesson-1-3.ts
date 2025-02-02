@@ -1,9 +1,9 @@
 import { DrawingBuffer } from "../lib/DrawingBuffer";
-import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
 import { Sampler } from "../lib/Sampler";
 import { loadTexture } from "../lib/Texture";
 import { BarycentricPoint, Colour, Point, UV } from "../lib/Types";
 import textureURL from '../assets/texture.png';
+import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
 
 function drawTexturedTriangle(db: DrawingBuffer, vertices: Point[], uvs: UV[], sampler: Sampler) {
     // Colour array to store and pass around
@@ -23,11 +23,11 @@ function drawTexturedTriangle(db: DrawingBuffer, vertices: Point[], uvs: UV[], s
 export async function lesson1_3(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
     const triangleVerticies: Point[] = [
-        [100, 75], [100, 175], [200, 175]
+        [100, 75], [200, 175], [100, 175]
     ];
 
     const uvs: UV[] = [
-        [0, 0], [0, 0.24], [0.24, 0.24]
+        [0, 0], [0.24, 0.24], [0, 0.24]
         // [0, 0], [0, 1], [1, 1]
     ];
 

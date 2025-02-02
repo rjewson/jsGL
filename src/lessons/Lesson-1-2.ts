@@ -18,7 +18,7 @@ function drawMultiColourTriangle(db: DrawingBuffer, vertices: Point[], colours: 
 export async function lesson1_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
     const triangleVerticies: Point[] = [
-        [100, 75], [100, 175], [200, 175]
+        [100, 75], [200, 175], [100, 175]
     ];
 
     const colours: Colour[] = [

@@ -1,9 +1,9 @@
 import { DrawingBuffer } from "../lib/DrawingBuffer";
-import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
 import { Sampler } from "../lib/Sampler";
 import { loadTexture } from "../lib/Texture";
 import { BarycentricPoint, Colour, Point, UV } from "../lib/Types";
 import textureURL from '../assets/texture.png';
+import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
 
 type Uniforms = {
     sampler: Sampler;
@@ -64,13 +64,13 @@ function drawTexturedTriangle(
 export async function lesson2_1(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
 
     const vertex: Point[] = [
-        [50, 50], [50, 150], [150, 150],
-        [60, 50], [160, 150], [160, 50]
+        [50, 50], [150, 150], [50, 150], 
+        [60, 50], [160, 50], [160, 150]
     ];
 
     const uv: UV[] = [
-        [0, 0], [0, 0.24], [0.24, 0.24],
-        [0, 0], [0.24, 0.24], [0.24, 0]
+        [0, 0], [0.24, 0.24], [0, 0.24], 
+        [0, 0], [0.24, 0], [0.24, 0.24] 
     ];
 
     const texture = await loadTexture(textureURL);

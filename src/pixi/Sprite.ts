@@ -49,21 +49,22 @@ export class Sprite extends Container {
         uvData[index][0] = uvs[0]; //frame.x / tw;
         uvData[index][1] = uvs[1]; //frame.y / th;
         
-        //1 BL
+        //1 BR
         //Verts
-        vertexData[index + 1][0] = a * w1 + c * h0 + tx;
-        vertexData[index + 1][1] = d * h0 + b * w1 + ty;
+        vertexData[index + 1][0] = a * w0 + c * h0 + tx;
+        vertexData[index + 1][1] = d * h0 + b * w0 + ty;
         //UV
-        uvData[index + 1][0] = uvs[6]; //frame.x / tw;
-        uvData[index + 1][1] = uvs[7]; //(frame.y + frame.height) / th;
+        uvData[index + 1][0] = uvs[4]; //(frame.x + frame.width) / tw;
+        uvData[index + 1][1] = uvs[5]; //(frame.y + frame.height) / th;
+        
+        //2 BL
+        //Verts
+        vertexData[index + 2][0] = a * w1 + c * h0 + tx;
+        vertexData[index + 2][1] = d * h0 + b * w1 + ty;
+        //UV
+        uvData[index + 2][0] = uvs[6]; //frame.x / tw;
+        uvData[index + 2][1] = uvs[7]; //(frame.y + frame.height) / th;
 
-        //2 BR
-        //Verts
-        vertexData[index + 2][0] = a * w0 + c * h0 + tx;
-        vertexData[index + 2][1] = d * h0 + b * w0 + ty;
-        //UV
-        uvData[index + 2][0] = uvs[4]; //(frame.x + frame.width) / tw;
-        uvData[index + 2][1] = uvs[5]; //(frame.y + frame.height) / th;
        
         //3 TL
         //Verts
@@ -73,21 +74,22 @@ export class Sprite extends Container {
         uvData[index+3][0] = uvs[0]; //frame.x / tw;
         uvData[index+3][1] = uvs[1]; //frame.y / th;
 
-        //4 BR
+        //4 TR
         //Verts
-        vertexData[index + 4][0] = a * w0 + c * h0 + tx;
-        vertexData[index + 4][1] = d * h0 + b * w0 + ty;
+        vertexData[index + 4][0] = a * w0 + c * h1 + tx;
+        vertexData[index + 4][1] = d * h1 + b * w0 + ty;
         //UV
-        uvData[index + 4][0] = uvs[4]; //(frame.x + frame.width) / tw;
-        uvData[index + 4][1] = uvs[5]; //(frame.y + frame.height) / th;
+        uvData[index + 4][0] = uvs[2]; //(frame.x + frame.width) / tw;
+        uvData[index + 4][1] = uvs[3]; //frame.y / th;
+        
+        //5 BR
+        //Verts
+        vertexData[index + 5][0] = a * w0 + c * h0 + tx;
+        vertexData[index + 5][1] = d * h0 + b * w0 + ty;
+        //UV
+        uvData[index + 5][0] = uvs[4]; //(frame.x + frame.width) / tw;
+        uvData[index + 5][1] = uvs[5]; //(frame.y + frame.height) / th;
 
-        //5 TR
-        //Verts
-        vertexData[index + 5][0] = a * w0 + c * h1 + tx;
-        vertexData[index + 5][1] = d * h1 + b * w0 + ty;
-        //UV
-        uvData[index + 5][0] = uvs[2]; //(frame.x + frame.width) / tw;
-        uvData[index + 5][1] = uvs[3]; //frame.y / th;
        
     }
 

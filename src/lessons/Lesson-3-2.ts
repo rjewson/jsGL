@@ -20,13 +20,13 @@ export async function lesson3_2(screenCtx: CanvasRenderingContext2D, db: Drawing
 
   // Normalized triangle
   const vertex: Point[] = [
-    [-1, -1], [-1, 1], [1, 1],
-    [-1, -1], [1, 1], [1, -1]
+    [-1, -1], [1, 1], [-1, 1], 
+    [-1, -1], [1, -1], [1, 1]
   ];
 
   const uv: UV[] = [
-    [0, 0], [0, 0.25], [0.25, 0.25],
-    [0, 0], [0.25, 0.25], [0.25, 0]
+    [0, 0], [0.25, 0.25], [0, 0.25], 
+    [0, 0], [0.25, 0], [0.25, 0.25]
   ];
 
   let scale = 1;
