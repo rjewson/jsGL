@@ -25,13 +25,13 @@ export class Sampler {
     }
 
     sample(u: number, v: number, result: Colour) {
-        const x = Math.floor(u * this.textureWidth) % this.textureWidth;
-        const y = Math.floor(v * this.textureHeight) % this.textureHeight;
+        let x = ~~(u * this.textureWidth) % this.textureWidth;
+        let y = ~~(v * this.textureHeight) % this.textureHeight;
         if (x === this.prevX && y === this.prevY) {
             return;
         }
         this.prevX = x; this.prevY = y;
-        const cell = y * (this.textureWidth * 4) + x * 4;
+        const cell = 4 * (x + y * this.textureWidth);
         result[0] = this.texture.data[cell + 0];
         result[1] = this.texture.data[cell + 1];
         result[2] = this.texture.data[cell + 2];

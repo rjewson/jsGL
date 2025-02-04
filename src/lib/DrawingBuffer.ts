@@ -80,15 +80,17 @@ function blendOver(data: Uint8ClampedArray, colour: Colour, index: number) {
 function blendNormal(data: Uint8ClampedArray, colour: Colour, index: number) {
     const alpha = colour[3] / 255;
     const invAlpha = 1 - alpha;
-    colour[0] = Math.round(colour[0] * alpha + data[index] * invAlpha);
-    colour[1] = Math.round(colour[1] * alpha + data[index + 1] * invAlpha);
-    colour[2] = Math.round(colour[2] * alpha + data[index + 2] * invAlpha);
-    colour[3] = Math.round(colour[3] + data[index + 3] * invAlpha);
+    // data is clamped so no need to -> colour[0] = Math.round(colour[0] * alpha + data[index] * invAlpha);
+    colour[0] = colour[0] * alpha + data[index] * invAlpha;
+    colour[1] = colour[1] * alpha + data[index + 1] * invAlpha;
+    colour[2] = colour[2] * alpha + data[index + 2] * invAlpha;
+    colour[3] = colour[3] + data[index + 3] * invAlpha;
 }
 
 function blendAdd(data: Uint8ClampedArray, colour: Colour, index: number) {
-    colour[0] = Math.min(255, colour[0] + data[index]);
-    colour[1] = Math.min(255, colour[1] + data[index + 1]);
-    colour[2] = Math.min(255, colour[2] + data[index + 2]);
-    colour[3] = Math.min(255, colour[3] + data[index + 3]);
+    // data is clamped so no need to -> colour[0] = Math.min(255, colour[0] + data[index]);
+    colour[0] = colour[0] + data[index];
+    colour[1] = colour[1] + data[index + 1];
+    colour[2] = colour[2] + data[index + 2];
+    colour[3] = colour[3] + data[index + 3];
 }
