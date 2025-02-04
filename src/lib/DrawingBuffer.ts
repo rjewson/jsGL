@@ -20,6 +20,8 @@ export class DrawingBuffer extends ImageData {
     private _width: number;
     private _height: number;
 
+    private data32: Uint32Array;
+
     constructor(width: number, height: number) {
         super(width, height);
         this._width = width;
@@ -27,7 +29,7 @@ export class DrawingBuffer extends ImageData {
         this.defaultClip = new Clip(0, 0, width, height);
         this.setClip(this.defaultClip);
         this.blendMode(BlendMode.Normal);
-
+        this.data32 = new Uint32Array(this.data.buffer);
     }
 
     set(x: number, y: number, colour: Colour): void {
@@ -37,8 +39,14 @@ export class DrawingBuffer extends ImageData {
         }
         const index = 4 * (x + y * this._width);
         this.blendFn(this.data, colour, index);
-        this.data.set(colour, index);
-
+        // write it via 8 bit view
+        // this.data.set(colour, index);
+        // write it via 32 bit view
+        this.data32[(y * this._width + x)] =
+            (colour[3] << 24) |	// alpha
+            (colour[2] << 16) |	// blue
+            (colour[1] << 8) |	// green
+            colour[0];		// red
     }
 
     write(outputCtx: CanvasRenderingContext2D): void {
