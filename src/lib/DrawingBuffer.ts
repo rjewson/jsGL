@@ -33,7 +33,7 @@ export class DrawingBuffer extends ImageData {
     }
 
     set(x: number, y: number, colour: Colour): void {
-        // if alpha is 0, don't draw
+        // if alpha is 0, don't draw, early exit
         if (colour[3] === 0) {
             return;
         }
@@ -41,12 +41,13 @@ export class DrawingBuffer extends ImageData {
         this.blendFn(this.data, colour, index);
         // write it via 8 bit view
         // this.data.set(colour, index);
-        // write it via 32 bit view
-        this.data32[(y * this._width + x)] =
+        // or
+        // write it via 32 bit view, does not consider endianness
+        this.data32[x + y * this._width] =
             (colour[3] << 24) |	// alpha
             (colour[2] << 16) |	// blue
-            (colour[1] << 8) |	// green
-            colour[0];		// red
+            (colour[1] << 8)  |	// green
+            colour[0];		    // red
     }
 
     write(outputCtx: CanvasRenderingContext2D): void {
@@ -71,6 +72,23 @@ export class DrawingBuffer extends ImageData {
 
     clearClip() {
         this.clip = this.defaultClip;
+    }
+
+    blendNormal(colour: Colour, index: number) {
+        const alpha = colour[3] / 255;
+        // if (alpha === 1) {
+        //     colour[0] = this.data[index];
+        //     colour[1] = this.data[index + 1];
+        //     colour[2] = this.data[index + 2];
+        //     colour[3] = this.data[index + 3];
+        // } else {
+            const invAlpha = 1 - alpha;
+            // data is clamped so no need to -> colour[0] = Math.round(colour[0] * alpha + data[index] * invAlpha);
+            colour[0] = colour[0] * alpha + this.data[index] * invAlpha;
+            colour[1] = colour[1] * alpha + this.data[index + 1] * invAlpha;
+            colour[2] = colour[2] * alpha + this.data[index + 2] * invAlpha;
+            colour[3] = colour[3] + this.data[index + 3] * invAlpha;
+        // }
     }
 
 }

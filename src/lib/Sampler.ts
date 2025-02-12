@@ -10,6 +10,8 @@ export class Sampler {
     private textureWidth: number = 0;
     private textureHeight: number = 0;
 
+    private data32: Uint32Array;
+
     constructor() {
     }
 
@@ -18,6 +20,9 @@ export class Sampler {
         // Cache the width and height for faster sampling
         this.textureWidth = texture.width;
         this.textureHeight = texture.height;
+        this.prevX = -1;
+        this.prevY = -1;
+        this.data32 = new Uint32Array(texture.data.buffer);
     }
 
     unbind() {
@@ -31,6 +36,13 @@ export class Sampler {
             return;
         }
         this.prevX = x; this.prevY = y;
+        
+        // const pixel = this.data32[(y * this.textureWidth + x)];
+        // result[0] = (pixel & 0xFF);
+        // result[1] = (pixel >> 8) & 0xFF;
+        // result[2] = (pixel >> 16) & 0xFF;
+        // result[3] = (pixel >> 24) & 0xFF;
+        
         const cell = 4 * (x + y * this.textureWidth);
         result[0] = this.texture.data[cell + 0];
         result[1] = this.texture.data[cell + 1];

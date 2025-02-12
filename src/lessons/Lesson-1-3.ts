@@ -7,6 +7,7 @@ import { blendBC, rasterizeTriangle, RenderFn } from "../lib/Rasterizer";
 
 function drawTexturedTriangle(db: DrawingBuffer, vertices: Point[], uvs: UV[], sampler: Sampler) {
     // Colour array to store and pass around
+    debugger;
     const interpolatedUV: UV = [0, 0];
     const sampledColour: Colour = [0, 0, 0, 0];
     const fn: RenderFn = (x: number, y: number, bc: BarycentricPoint) => {

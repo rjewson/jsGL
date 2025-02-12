@@ -42,7 +42,6 @@ export function vertexShader(attributes: Attributes, uniforms: Uniforms, varying
 export function fragmentShader(varying: Varying, uniforms: Uniforms, gl_FragColor: Colour): void {
   // write the interpolated varying colour value unchanged into the fragment colour
   uniforms.sampler.sample(varying.uv[0], varying.uv[1], gl_FragColor);
-  // gl_FragColor[3]=128;
 }
 
 // Draw call to WebGL
