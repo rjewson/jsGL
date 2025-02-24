@@ -1,6 +1,6 @@
 import { Texture } from "../lib/Texture";
+import { Rectangle } from "./Rectangle";
 import { SpriteTexture } from "./SpriteTexture";
-import { Rectangle, Vector2 } from "./utils";
 
 export type SpriteSheetConfig = { [key: string]: { x: number, y: number, width: number, height: number } };
 
@@ -19,7 +19,7 @@ export class BitmapFont {
         for (const key in this.config) {
             if (Object.prototype.hasOwnProperty.call(this.config, key)) {
                 const { x, y, width, height}  = this.config[key];
-                const texture = new SpriteTexture(this.baseTexture, new Rectangle(x, y, width, height),new Vector2(4,4));
+                const texture = new SpriteTexture(this.baseTexture, new Rectangle(x, y, width, height));
                 this.textures.set(key, texture);
             }
         }

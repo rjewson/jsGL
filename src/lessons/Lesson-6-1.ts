@@ -7,7 +7,7 @@ import { loadTexture, Texture } from "../lib/Texture";
 import { Stage } from "../pixi/Stage";
 import { Sprite } from "../pixi/Sprite";
 import { SpriteTexture } from "../pixi/SpriteTexture";
-import { Rectangle } from "../pixi/utils";
+import { Rectangle } from "../pixi/Rectangle";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 import { onTick } from "../utils/Ticker";
@@ -67,7 +67,6 @@ export async function lesson6_1(screenCtx: CanvasRenderingContext2D, db: Drawing
 
     drawDisplayList(db, stage, draw);
     db.write(screenCtx);
-    console.log("Draw Calls = ", drawCallsPerFrame);
     drawCallsPerFrame = 0;
     return true;
   }

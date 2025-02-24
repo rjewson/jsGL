@@ -1,6 +1,7 @@
 import { BlendMode, DrawingBuffer } from "../lib/DrawingBuffer";
 import { Sampler } from "../lib/Sampler";
 import textureURL from '../assets/texture.png';
+
 import { Point, UV } from "../lib/Types";
 import { loadTexture } from "../lib/Texture";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";

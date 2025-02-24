@@ -2,7 +2,7 @@ import { BlendMode } from "../lib/DrawingBuffer";
 import { Point } from "../lib/Types";
 import { Container } from "./Container";
 import { SpriteTexture } from "./SpriteTexture";
-import { Vector2 } from "./utils";
+import { Vector2 } from "./Vector2";
 
 export class Sprite extends Container {
 

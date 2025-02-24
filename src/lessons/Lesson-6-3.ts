@@ -8,7 +8,7 @@ import { Sprite } from "../pixi/Sprite";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 import { onTick } from "../utils/Ticker";
-import { Rectangle } from "../pixi/utils";
+import { Rectangle } from "../pixi/Rectangle";
 import { SpriteTexture } from "../pixi/SpriteTexture";
 
 export async function lesson6_3(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {
@@ -48,7 +48,6 @@ export async function lesson6_3(screenCtx: CanvasRenderingContext2D, db: Drawing
 
       drawDisplayList(db, stage, draw);
       db.write(screenCtx);
-      console.log("Draw Calls = ", drawCallsPerFrame);
       drawCallsPerFrame = 0;
       return true;
     }

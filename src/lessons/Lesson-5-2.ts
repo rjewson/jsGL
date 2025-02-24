@@ -7,7 +7,7 @@ import { loadTexture, Texture } from "../lib/Texture";
 import { Stage } from "../pixi/Stage";
 import { Sprite } from "../pixi/Sprite";
 import { SpriteTexture } from "../pixi/SpriteTexture";
-import { Rectangle } from "../pixi/utils";
+import { Rectangle } from "../pixi/Rectangle";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 

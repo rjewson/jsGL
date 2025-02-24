@@ -1,6 +1,7 @@
 import { Point } from "../lib/Types";
 import { Container } from "./Container";
-import { CreateMat3, Vector2 } from "./utils";
+import { CreateMat3 } from "./utils";
+import { Vector2 } from "./Vector2";
 
 export class DisplayObject {
 

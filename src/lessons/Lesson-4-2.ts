@@ -6,10 +6,10 @@ import { loadTexture, Texture } from "../lib/Texture";
 import { Stage } from "../pixi/Stage";
 import { Sprite } from "../pixi/Sprite";
 import { SpriteTexture } from "../pixi/SpriteTexture";
-import { Rectangle } from "../pixi/utils";
 import { Uniforms, RenderParams, drawTriangles, vertexShader, fragmentShader } from "./Lesson-2-2";
 import { drawDisplayList } from "../pixi/PixiJsGLSpriteRenderer";
 import { onTick } from "../utils/Ticker";
+import { Rectangle } from "../pixi/Rectangle";
 
 // Example 2 - Simple displaylist example. 1 Sprite with 1 texture and 1 child sprite with second texture
 export async function lesson4_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {

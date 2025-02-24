@@ -1,15 +1,13 @@
 import { Texture } from "../lib/Texture";
-import { Rectangle, Vector2 } from "./utils";
+import { Rectangle } from "./Rectangle";
 
 export class SpriteTexture {
     public baseTexture: Texture;
     public frame: Rectangle;
-    public trim: Vector2;
-    public pivot: Vector2;
     public noFrame: boolean;
     public uvs: Float32Array;
 
-    constructor(baseTexture: Texture, frame: Rectangle = undefined, pivot: Vector2 = undefined) {
+    constructor(baseTexture: Texture, frame: Rectangle = undefined) {
         this.baseTexture = baseTexture;
 
         if (!frame) {
@@ -20,8 +18,6 @@ export class SpriteTexture {
             this.frame = frame;
         }
 
-        this.trim = new Vector2();
-        this.pivot = pivot ? new Vector2() : pivot;
         this.uvs = new Float32Array(8);
 
         this.updateUVS();

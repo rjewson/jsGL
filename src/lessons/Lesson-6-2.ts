@@ -101,7 +101,6 @@ export async function lesson6_2(screenCtx: CanvasRenderingContext2D, db: Drawing
 
       drawDisplayList(db, stage, draw);
       db.write(screenCtx);
-      console.log("Draw Calls = ", drawCallsPerFrame);
       drawCallsPerFrame = 0;
       return true;
     }
