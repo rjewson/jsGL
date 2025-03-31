@@ -12,7 +12,6 @@ import { lesson5_2 } from "./lessons/Lesson-5-2";
 import { lesson5_3 } from "./lessons/Lesson-5-3";
 import { lesson6_1 } from "./lessons/Lesson-6-1";
 import { lesson6_2 } from "./lessons/Lesson-6-2";
-import { lesson6_3 } from "./lessons/Lesson-6-3";
 import { DrawingBuffer } from "./lib/DrawingBuffer";
 
 import "./styles.css";
@@ -41,7 +40,6 @@ const lessons: { [key: string]: (screenCtx: CanvasRenderingContext2D, fb: Drawin
     "5-3": lesson5_3,
     "6-1": lesson6_1,
     "6-2": lesson6_2,
-    "6-3": lesson6_3,
 };
 
 // Make UI
