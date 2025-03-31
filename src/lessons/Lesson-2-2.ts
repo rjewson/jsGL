@@ -42,6 +42,11 @@ export function vertexShader(attributes: Attributes, uniforms: Uniforms, varying
 export function fragmentShader(varying: Varying, uniforms: Uniforms, gl_FragColor: Colour): void {
   // sample the texture with the interpolated varying uv and write to the fragment colour
   uniforms.sampler.sample(varying.uv[0], varying.uv[1], gl_FragColor);
+  // gl_FragColor[0] = 128;
+  // gl_FragColor[1] = 128;
+  // gl_FragColor[2] = 128;
+  // gl_FragColor[3] = 255; 
+
 }
 
 // Draw call to WebGL
@@ -54,12 +59,13 @@ export function drawTriangles(
   uniforms: Uniforms,
   vertexShader: VertexShader,
   fragmentShader: FragmentShader,
-  params: RenderParams) {
+  params: RenderParams): number {
 
   // Set the 'webgl' params
   fb.blendMode(params.blendMode);
 
   // Everything below here is executed on the GPU
+  let fragmentCount = 0;
 
   // The buffers have to be uploaded from CPU side to GPU side
   const { vertex, uv } = buffers;
@@ -85,6 +91,7 @@ export function drawTriangles(
     blendBC(bc, varyingUV, fragmentVarying.uv) as UV;
     fragmentShader(fragmentVarying, uniforms, gl_FragColor);
     fb.set(x, y, gl_FragColor);
+    fragmentCount++;
   }
 
   for (let index = 0; index < count * 3; index += 3) {
@@ -101,6 +108,7 @@ export function drawTriangles(
     // Call the rasterizer with data from the vertex shader, and the redner function
     rasterizeTriangle(processedVertex1, processedVertex2, processedVertex3, fb.clip.clipTL, fb.clip.clipBR, fn);
   }
+  return fragmentCount;
 }
 
 export async function lesson2_2(screenCtx: CanvasRenderingContext2D, db: DrawingBuffer) {

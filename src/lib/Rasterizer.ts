@@ -6,6 +6,24 @@ function orient2d(ax: number, ay: number, bx: number, by: number, cx: number, cy
 
 export type RenderFn = (x: number, y: number, bc: BarycentricPoint) => void;
 
+function isLeftOrTopEdge(startX:number,startY:number, endX:number,endY:number): boolean {
+    const dX = endX - startX;
+    const dY = endY - startY;
+
+    const leftEdge = dY > 0;
+    const topEdge = dY == 0 && dX < 0;
+    return leftEdge || topEdge;
+  }
+
+//   isLeftOrTopEdge(start, end) {
+//     const edge = new FixedPointVector(end);
+//     edge.sub(start);
+
+//     const leftEdge = edge[1] > 0;
+//     const topEdge = edge[1] == 0 && edge[0] < 0;
+//     return leftEdge || topEdge;
+//   }
+
 export function rasterizeTriangle(v0: Point, v1: Point, v2: Point, clip_p1: Point, clip_p2: Point, fn: RenderFn): void {
 
     const v0x: number = v0[0];
@@ -32,6 +50,11 @@ export function rasterizeTriangle(v0: Point, v1: Point, v2: Point, clip_p1: Poin
     let w0_row = orient2d(v1x, v1y, v2x, v2y, minX, minY);
     let w1_row = orient2d(v2x, v2y, v0x, v0y, minX, minY);
     let w2_row = orient2d(v0x, v0y, v1x, v1y, minX, minY);
+
+    // TODO figure out
+    // if (isLeftOrTopEdge(v1x, v1y, v2x, v2y)) w0_row--;
+    // if (isLeftOrTopEdge(v2x, v2y, v0x, v0y)) w1_row--;
+    // if (isLeftOrTopEdge(v0x, v0y, v1x, v1y)) w2_row--;
 
     const bc: BarycentricPoint = [0, 0, 0];
 

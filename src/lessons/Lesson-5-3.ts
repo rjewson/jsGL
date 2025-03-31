@@ -21,6 +21,7 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, db: Drawing
   const params: RenderParams = { blendMode: BlendMode.Normal };
 
   let drawCallsPerFrame = 0;
+  let fragmentsPerFrame = 0;
 
   const greenBallonSourceTexture = await loadTexture(greenBallonTextureURL);
   const redBallonSourceTexture = await loadTexture(redBallonTextureURL);
@@ -33,7 +34,7 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, db: Drawing
   function draw(db: DrawingBuffer, vertexData: Point[], uvData: Point[], texture: Texture, blendMode: BlendMode, count: number) {
     sampler.bind(texture);
     params.blendMode = blendMode;
-    drawTriangles(db, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
+    fragmentsPerFrame += drawTriangles(db, count * 2, { vertex: vertexData, uv: uvData }, uniforms, vertexShader, fragmentShader, params);
     drawCallsPerFrame++;
   }
 
@@ -89,7 +90,9 @@ export async function lesson5_3(screenCtx: CanvasRenderingContext2D, db: Drawing
     drawDisplayList(db, stage, draw);
     db.write(screenCtx);
     console.log("Draw Calls = ", drawCallsPerFrame);
+    console.log("Fragment Count = ", fragmentsPerFrame);
     drawCallsPerFrame = 0;
+    fragmentsPerFrame = 0;
     return true;
   }
 
